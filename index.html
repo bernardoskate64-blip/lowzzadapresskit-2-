@@ -1,230 +1,972 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOWZZADA | Official Artist Page</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LOWZZADA — DJ</title>
+  <meta name="description" content="O pulso do Tech House no litoral do Rio de Janeiro."/>
+  <meta property="og:title" content="LOWZZADA — DJ"/>
+  <meta property="og:description" content="House · Tech House · Indie Dance · Rio de Janeiro"/>
 
-    <style>
-        :root {
-            --primary: #00ffcc; 
-            --bg: #000000;
-            --surface: #0a0a0a;
-            --text: #ffffff;
-            --accent: #0066ff;
-            --transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Jost:ital,wght@0,200;0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            font-family: 'Inter', sans-serif; 
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────────────── */
+    :root {
+      --bg:        #05050a;
+      --surface:   #0a0a12;
+      --border:    rgba(255,255,255,0.07);
+      --accent:    #00ffcc;
+      --accent2:   #7b5ea7;
+      --gold:      #c9a84c;
+      --text:      #f0f0f5;
+      --muted:     #44445a;
+      --ff-head:   'Syncopate', sans-serif;
+      --ff-body:   'Jost', sans-serif;
+      --ff-mono:   'Space Mono', monospace;
+      --ease:      cubic-bezier(0.23, 1, 0.32, 1);
+    }
 
-        /* --- Custom Cursor (Opcional, dá um ar Pro) --- */
-        body { cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><circle cx="5" cy="5" r="5" fill="%2300ffcc"/></svg>'), auto; }
+    /* ── RESET ──────────────────────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--ff-body);
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><circle cx="4" cy="4" r="4" fill="%2300ffcc"/></svg>') 4 4, auto;
+    }
 
-        /* --- Nav de Luxo --- */
-        nav {
-            position: fixed; top: 0; width: 100%; padding: 30px 6%;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 1000; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
-            backdrop-filter: blur(15px);
-        }
-        .logo { font-family: 'Syncopate', sans-serif; font-weight: 700; letter-spacing: 8px; font-size: 1.1rem; color: #fff; text-decoration: none; }
-        .nav-links a { color: #fff; text-decoration: none; font-size: 0.65rem; letter-spacing: 3px; margin-left: 30px; text-transform: uppercase; opacity: 0.6; transition: var(--transition); }
-        .nav-links a:hover { opacity: 1; color: var(--primary); }
+    /* ── GRAIN ──────────────────────────────────────────────────── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      pointer-events: none;
+      opacity: 0.022;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
 
-        /* --- Hero High-Impact --- */
-        .hero {
-            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            position: relative; overflow: hidden; text-align: center;
-        }
-        .hero-video-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.45; z-index: -1; filter: contrast(110%) brightness(80%); }
-        .hero h1 { font-family: 'Syncopate', sans-serif; font-size: clamp(3rem, 15vw, 10rem); line-height: 0.8; letter-spacing: -5px; margin-bottom: 20px; text-transform: uppercase; }
-        .hero p { letter-spacing: 15px; font-weight: 300; color: var(--primary); font-size: 0.7rem; text-transform: uppercase; margin-top: 10px; }
+    /* ── CUSTOM SCROLLBAR ───────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
 
-        /* --- Grid de Fotos: O Ajuste Perfeito --- */
-        .section-label { padding: 100px 6% 20px; font-family: 'Syncopate'; font-size: 0.8rem; letter-spacing: 5px; color: #333; }
-        
-        .gallery-wrap {
-            padding: 0 6% 100px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 25px;
-        }
+    /* ── NAV ────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:1000;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.6rem 5%;
+      background: linear-gradient(to bottom, rgba(5,5,10,0.95), transparent);
+      transition: background 0.4s var(--ease), backdrop-filter 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(5,5,10,0.93);
+      backdrop-filter: blur(22px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--ff-head);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a {
+      font-family: var(--ff-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left:0;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transition: width 0.3s var(--ease);
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { width: 100%; }
 
-        .photo-card {
-            position: relative;
-            height: 550px; /* Altura fixa para manter o grid simétrico */
-            overflow: hidden;
-            background: #080808;
-            border-radius: 2px;
-        }
+    .nav-burger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+    .nav-burger span { display:block; width:22px; height:1px; background:var(--text); transition:all 0.3s; }
 
-        .photo-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
-        }
+    /* ── HERO ───────────────────────────────────────────────────── */
+    #hero {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+      overflow: hidden;
+    }
 
-        /* ANÁLISE E CORREÇÃO DE ENQUADRAMENTO */
-        /* Ajuste para fotos onde o rosto/corpo está muito no topo ou fundo */
-        .img-top { object-position: center 15%; } /* Sobe a imagem */
-        .img-center { object-position: center center; } /* Foco central */
-        .img-bottom { object-position: center 85%; } /* Desce a imagem */
+    .hero-video-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-video-wrap video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.42;
+      filter: contrast(1.08) brightness(0.78);
+      transform: scale(1.04);
+      transition: transform 0.1s linear;
+    }
+    /* vignette */
+    .hero-video-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(5,5,10,0.98) 0%, rgba(5,5,10,0.3) 40%, transparent 70%),
+        linear-gradient(to right, rgba(5,5,10,0.6) 0%, transparent 60%);
+      z-index: 1;
+    }
+    /* diagonal grid */
+    .hero-video-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background-image:
+        linear-gradient(135deg, rgba(255,255,255,0.012) 1px, transparent 1px),
+        linear-gradient(45deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
 
-        .photo-card:hover img { transform: scale(1.1); }
-        .photo-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent); pointer-events: none; }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 5% 5rem;
+      max-width: 1200px;
+      width: 100%;
+    }
+    .hero-eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.8s var(--ease) 0.4s forwards;
+    }
+    .hero-title {
+      font-family: var(--ff-head);
+      font-weight: 700;
+      font-size: clamp(4.5rem, 16vw, 15rem);
+      line-height: 0.85;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(35px);
+      animation: fadeUp 1.1s var(--ease) 0.6s forwards;
+    }
+    .hero-sub {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.2s forwards;
+    }
+    .hero-sub p {
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: rgba(240,240,245,0.55);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      max-width: 360px;
+      line-height: 1.7;
+    }
+    .hero-genres { display:flex; gap:0.5rem; flex-wrap:wrap; }
+    .genre-tag {
+      font-family: var(--ff-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid rgba(0,255,204,0.25);
+      color: rgba(0,255,204,0.7);
+      border-radius: 1px;
+      transition: border-color 0.3s, color 0.3s, background 0.3s;
+    }
+    .genre-tag:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,255,204,0.06); }
 
-        /* --- Vídeos: Elegância Minimalista --- */
-        .video-section { padding: 100px 6%; background: #050505; }
-        .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .video-box { border-radius: 8px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.05); }
-        video { width: 100%; height: auto; display: block; }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      right: 5%;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.8s forwards;
+    }
+    .hero-scroll span {
+      font-family: var(--ff-mono);
+      font-size: 0.5rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      writing-mode: vertical-rl;
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 55px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: linePulse 2.2s ease-in-out infinite;
+    }
 
-        /* --- Gigs Archive: Organizado --- */
-        .archive-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 20px;
-            padding: 0 6% 100px;
-        }
-        .archive-item {
-            height: 300px;
-            overflow: hidden;
-            border-radius: 4px;
-            filter: grayscale(100%);
-            transition: var(--transition);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .archive-item:hover { filter: grayscale(0%); transform: translateY(-5px); border-color: var(--primary); }
-        .archive-item img { width: 100%; height: 100%; object-fit: cover; }
+    /* ── SECTION COMMONS ───────────────────────────────────────── */
+    .section-wrap {
+      padding: 8rem 5%;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+    .section-wrap.narrow { max-width: 1100px; }
 
-        /* --- Connect / Player --- */
-        .connect { text-align: center; padding: 100px 6%; border-top: 1px solid #111; }
-        iframe { border-radius: 8px; filter: invert(0); margin-bottom: 50px; }
-        .social-row { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
-        .social-link { font-family: 'Syncopate'; font-size: 0.7rem; color: #fff; text-decoration: none; letter-spacing: 3px; transition: 0.3s; }
-        .social-link:hover { color: var(--primary); text-shadow: 0 0 15px rgba(0,255,204,0.5); }
+    .sec-eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .sec-eyebrow::before {
+      content: '';
+      width: 2rem;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+    .sec-title {
+      font-family: var(--ff-head);
+      font-weight: 700;
+      font-size: clamp(2.2rem, 5.5vw, 5rem);
+      line-height: 0.9;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 4rem;
+    }
 
-        /* --- Footer --- */
-        footer { padding: 50px 6%; text-align: center; font-size: 0.6rem; color: #444; letter-spacing: 2px; }
+    .full-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+    }
 
-        @media (max-width: 768px) {
-            nav { padding: 20px; }
-            .nav-links { display: none; }
-            .gallery-wrap, .video-grid, .archive-grid { grid-template-columns: 1fr; }
-            .photo-card { height: 450px; }
-        }
-    </style>
+    /* ── ABOUT ──────────────────────────────────────────────────── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.8fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .about-kpi {
+      margin-bottom: 2.8rem;
+      padding-bottom: 2.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .about-kpi:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .kpi-num {
+      font-family: var(--ff-head);
+      font-weight: 700;
+      font-size: 3.8rem;
+      line-height: 1;
+      color: var(--text);
+      display: block;
+    }
+    .kpi-num span { color: var(--accent); }
+    .kpi-label {
+      font-family: var(--ff-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.4rem;
+      display: block;
+    }
+    .about-bio p {
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(240,240,245,0.75);
+      line-height: 2;
+      margin-bottom: 1.5rem;
+    }
+    .about-bio p strong { color: var(--text); font-weight: 500; }
+    .about-bio .lead {
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: rgba(240,240,245,0.9);
+      line-height: 1.85;
+      margin-bottom: 2rem;
+      border-left: 2px solid var(--accent);
+      padding-left: 1.5rem;
+    }
+    .about-bio .venues-inline {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      line-height: 2;
+      margin-top: 2rem;
+    }
+    .about-bio .venues-inline strong { color: rgba(0,255,204,0.75); font-weight: 700; }
+
+    /* ── PHOTOS SECTION ─────────────────────────────────────────── */
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+      gap: 12px;
+    }
+    .photo-item {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    /* Featured wide */
+    .photo-item.feat-wide { grid-column: span 7; aspect-ratio: 16/10; }
+    .photo-item.feat-tall { grid-column: span 5; aspect-ratio: 4/5; }
+    .photo-item.col-4     { grid-column: span 4; aspect-ratio: 4/5; }
+    .photo-item.col-6     { grid-column: span 6; aspect-ratio: 16/10; }
+
+    .photo-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 1.4s var(--ease), filter 0.6s;
+      filter: brightness(0.88);
+    }
+    .photo-item:hover img { transform: scale(1.06); filter: brightness(1); }
+    .photo-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(5,5,10,0.35), transparent 55%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .photo-item:hover::after { opacity: 1; }
+
+    /* ── VIDEOS SECTION ─────────────────────────────────────────── */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .video-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+      border-radius: 2px;
+    }
+    .video-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      z-index: 2;
+    }
+    .video-card.feat { grid-column: span 2; }
+    .video-card.feat .embed-wrap { aspect-ratio: 16/9; }
+    .embed-wrap { aspect-ratio: 16/9; }
+    .embed-wrap iframe,
+    .embed-wrap video {
+      width: 100%; height: 100%;
+      display: block;
+      border: none;
+    }
+    .embed-wrap video { object-fit: cover; }
+
+    /* ── GIGS SECTION ───────────────────────────────────────────── */
+    .gigs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .gig-card {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 9/16;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      transition: border-color 0.4s, transform 0.5s var(--ease);
+    }
+    .gig-card:hover { border-color: rgba(0,255,204,0.3); transform: translateY(-6px); }
+    .gig-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 1s var(--ease);
+      filter: brightness(0.9);
+    }
+    .gig-card:hover img { transform: scale(1.04); filter: brightness(1); }
+    .gig-card.landscape { aspect-ratio: 4/3; }
+
+    /* ── MUSIC ──────────────────────────────────────────────────── */
+    .music-embed-wrap {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .music-embed-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; left:0; right:0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      z-index: 1;
+    }
+    .music-embed-wrap iframe { display:block; width:100%; border:none; }
+
+    .spotify-wrap {
+      margin-top: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .spotify-wrap iframe { display:block; width:100%; border:none; }
+
+    /* ── CONNECT ────────────────────────────────────────────────── */
+    #connect { text-align: center; }
+    .connect-big {
+      font-family: var(--ff-head);
+      font-weight: 700;
+      font-size: clamp(3rem, 9vw, 9rem);
+      line-height: 0.88;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+    .connect-sub {
+      font-family: var(--ff-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4rem;
+    }
+    .social-row {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.9rem 1.8rem;
+      font-family: var(--ff-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      transition: border-color 0.35s, color 0.35s, background 0.35s, transform 0.3s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    .social-btn:hover { transform: translateY(-2px); }
+    .social-btn svg { width:13px; height:13px; fill:currentColor; flex-shrink:0; }
+    .social-btn.sc:hover  { border-color:#ff5500; color:#ff5500; }
+    .social-btn.yt:hover  { border-color:#ff0000; color:#ff0000; }
+    .social-btn.ig:hover  { border-color:#e1306c; color:#e1306c; }
+    .social-btn.sp:hover  { border-color:#1db954; color:#1db954; }
+
+    /* ── FOOTER ─────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo {
+      font-family: var(--ff-head);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.45em;
+      color: var(--muted);
+    }
+    .footer-copy {
+      font-family: var(--ff-mono);
+      font-size: 0.52rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+    }
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+    .footer-links a {
+      font-family: var(--ff-mono);
+      font-size: 0.52rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ── KEYFRAMES ──────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      to { opacity:1; transform:translateY(0); }
+    }
+    @keyframes fadeIn {
+      to { opacity:1; }
+    }
+    @keyframes linePulse {
+      0%,100% { opacity:0.35; transform:scaleY(1); }
+      50%      { opacity:1;    transform:scaleY(1.1); }
+    }
+
+    /* ── MOBILE ─────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; gap: 3.5rem; }
+      .photos-grid { grid-template-columns: 1fr 1fr; gap:8px; }
+      .photo-item.feat-wide,
+      .photo-item.feat-tall,
+      .photo-item.col-4,
+      .photo-item.col-6 { grid-column: span 1; aspect-ratio: 4/5; }
+      .videos-grid { grid-template-columns: 1fr; }
+      .video-card.feat { grid-column: span 1; }
+      .gigs-grid { grid-template-columns: repeat(2,1fr); }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 1.2rem 5%; }
+      .nav-links { display: none; }
+      .nav-burger { display: flex; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        inset: 0;
+        background: rgba(5,5,10,0.98);
+        backdrop-filter: blur(24px);
+        justify-content: center;
+        align-items: center;
+        gap: 3rem;
+        z-index: 999;
+      }
+      .nav-links.open a { font-size: 0.8rem; color: var(--text); }
+      .section-wrap { padding: 5rem 5%; }
+      .photos-grid { grid-template-columns: 1fr; gap:8px; }
+      .photo-item.feat-wide,
+      .photo-item.feat-tall,
+      .photo-item.col-4,
+      .photo-item.col-6 { grid-column: span 1; aspect-ratio: 16/10; }
+      .gigs-grid { grid-template-columns: 1fr; }
+      .hero-scroll { display: none; }
+      footer { flex-direction: column; text-align: center; }
+      .footer-links { justify-content: center; }
+    }
+  </style>
 </head>
 <body>
 
-    <nav>
-        <a href="#" class="logo">LOWZZADA</a>
-        <div class="nav-links">
-            <a href="#gallery">Gallery</a>
-            <a href="#video">Sessions</a>
-            <a href="#archive">Archive</a>
-            <a href="#connect">Contact</a>
-        </div>
-    </nav>
+<!-- ═══ NAV ═══════════════════════════════════════════════════════ -->
+<nav id="nav">
+  <a href="#" class="nav-logo">LOWZZADA</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about"   onclick="closeNav()">Sobre</a></li>
+    <li><a href="#photos"  onclick="closeNav()">Fotos</a></li>
+    <li><a href="#videos"  onclick="closeNav()">Vídeos</a></li>
+    <li><a href="#gigs"    onclick="closeNav()">Gigs</a></li>
+    <li><a href="#music"   onclick="closeNav()">Música</a></li>
+    <li><a href="#connect" onclick="closeNav()">Contato</a></li>
+  </ul>
+  <div class="nav-burger" id="burger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
 
-    <section class="hero">
-        <video class="hero-video-bg" autoplay muted loop playsinline>
-            <source src="IMG_7476.MOV" type="video/mp4">
-        </video>
-        <div data-aos="fade-down" data-aos-duration="1200">
-            <h1>LOWZZADA</h1>
-            <p>The Rio Tech House Culture</p>
-        </div>
-    </section>
+<!-- ═══ HERO ══════════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-video-wrap">
+    <video autoplay muted loop playsinline id="heroVid">
+      <source src="IMG_7476.MOV" type="video/mp4">
+      <source src="WhatsApp_Video_2026-04-30_at_11_34_47.mp4" type="video/mp4">
+    </video>
+  </div>
 
-    <div id="gallery" class="section-label">LIFESTYLE / PRESS</div>
-    <section class="gallery-wrap">
-        <div class="photo-card" data-aos="reveal-up">
-            <img src="6f72290a-3bba-4a50-8ace-632aadd9bf35.jpg" class="img-center" alt="Artist">
-        </div>
-        <div class="photo-card" data-aos="reveal-up" data-aos-delay="200">
-            <img src="WhatsApp Image 2026-04-30 at 11.53.49.jpeg" class="img-top" alt="Live Session">
-        </div>
-        <div class="photo-card" data-aos="reveal-up" data-aos-delay="400">
-            <img src="5e93562e-b33f-4952-9ed3-b335f07399f4.jpg" class="img-top" alt="Studio Press">
-        </div>
-    </section>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Rio de Janeiro · Tech House · Electronic Culture</p>
+    <h1 class="hero-title">LOWZZADA</h1>
+    <div class="hero-sub">
+      <p>O pulso do Tech House<br/>no litoral do Rio de Janeiro</p>
+      <div class="hero-genres">
+        <span class="genre-tag">House</span>
+        <span class="genre-tag">Tech House</span>
+        <span class="genre-tag">Minimal Tech</span>
+        <span class="genre-tag">Indie Dance</span>
+        <span class="genre-tag">Progressive</span>
+      </div>
+    </div>
+  </div>
 
-    <div id="video" class="section-label">LIVE SESSIONS</div>
-    <section class="video-section">
-        <div class="video-grid">
-            <div class="video-box" data-aos="zoom-in-up">
-                <video controls poster="6f72290a-3bba-4a50-8ace-632aadd9bf35.jpg">
-                    <source src="IMG_0419.MOV" type="video/mp4">
-                </video>
-            </div>
-            <div class="video-box" data-aos="zoom-in-up" data-aos-delay="200">
-                <video controls>
-                    <source src="IMG_3768.MOV" type="video/mp4">
-                </video>
-            </div>
-        </div>
-    </section>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
 
-    <div id="archive" class="section-label">GIG ARCHIVE</div>
-    <section class="archive-grid">
-        <div class="archive-item" data-aos="fade-up">
-            <img src="caa803fc-0055-453b-ab57-4a9daac49641.jpg" alt="Gig recap">
-        </div>
-        <div class="archive-item" data-aos="fade-up" data-aos-delay="100">
-            <img src="13857a2a-44db-44c2-a91e-3b56ae20293d.jpg" alt="Gig recap">
-        </div>
-        <div class="archive-item" data-aos="fade-up" data-aos-delay="200">
-            <img src="image_d478f8.jpg" alt="Nightlife">
-        </div>
-        <div class="archive-item" data-aos="fade-up" data-aos-delay="300">
-            <img src="image_d4747b.jpg" alt="DJ Set">
-        </div>
-    </section>
+<div class="full-divider"></div>
 
-    <section id="connect" class="connect">
-        <div data-aos="fade-up">
-            <iframe width="100%" height="180" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/693807927&color=%2300ffcc&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+<!-- ═══ ABOUT ═════════════════════════════════════════════════════ -->
+<section id="about">
+  <div class="section-wrap">
+    <p class="sec-eyebrow" data-aos="fade-right">Artista</p>
+    <div class="about-grid">
+
+      <!-- KPIs -->
+      <div>
+        <div class="about-kpi" data-aos="fade-up" data-aos-delay="0">
+          <span class="kpi-num">3000<span>+</span></span>
+          <span class="kpi-label">Noites na cabine</span>
         </div>
-        
-        <div class="social-row">
-            <a href="https://www.instagram.com/lowzzada_dj" target="_blank" class="social-link">INSTAGRAM</a>
-            <a href="https://soundcloud.com/diogo-diogo-693807927" target="_blank" class="social-link">SOUNDCLOUD</a>
-            <a href="https://www.youtube.com/@lowzzada" target="_blank" class="social-link">YOUTUBE</a>
+        <div class="about-kpi" data-aos="fade-up" data-aos-delay="100">
+          <span class="kpi-num">8<span>+</span></span>
+          <span class="kpi-label">Venues & festivais</span>
         </div>
-    </section>
+        <div class="about-kpi" data-aos="fade-up" data-aos-delay="200">
+          <span class="kpi-num">5</span>
+          <span class="kpi-label">Gêneros dominados</span>
+        </div>
+      </div>
 
-    <footer>
-        LOWZZADA © 2026 | ALL RIGHTS RESERVED
-    </footer>
+      <!-- Bio -->
+      <div class="about-bio" data-aos="fade-up" data-aos-delay="100">
+        <h2 class="sec-title" style="margin-bottom:2rem;">O Artista</h2>
+        <p class="lead">
+          Com uma identidade sonora marcada pelo groove constante e pela energia contagiante do Tech House, <strong>LOWZZADA</strong> se consolida como um dos principais nomes da cena eletrônica carioca.
+        </p>
+        <p>
+          Com raízes profundas na <strong>Região dos Lagos</strong>, traduz a sofisticação e o estilo de vida praiano em sets que transitam entre <strong>House, Tech House</strong> e <strong>Indie Dance</strong>.
+        </p>
+        <p>
+          Natural do Rio de Janeiro, vem se destacando com apresentações contagiantes e cheias de energia — sets que se conectam com o público e criam uma vibe única do início ao fim. Chama atenção por uma pesquisa musical diferenciada, trazendo sons dançantes, inovadores e com identidade própria.
+        </p>
+        <div class="venues-inline">
+          <strong>PRIVILEGE BÚZIOS</strong> · <strong>SILK BEACH CLUB</strong> · <strong>MOVIDA BÚZIOS</strong> · <strong>FISHBONE BÚZIOS</strong><br/>
+          <strong>TUNDRA GARDEN FRIBURGO</strong> · <strong>RÉVEILLON SUNRISE MACAÉ</strong> · <strong>MUV MACAÉ</strong> · <strong>ONDA MÁXIMA SAQUAREMA</strong>
+        </div>
+      </div>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        // Inicialização de animações Pro
-        AOS.init({
-            duration: 1000,
-            once: false,
-            easing: 'ease-out-quart'
-        });
+    </div>
+  </div>
+</section>
 
-        // Efeito Parallax suave no Hero
-        window.addEventListener('scroll', function() {
-            const video = document.querySelector('.hero-video-bg');
-            let scroll = window.pageYOffset;
-            video.style.transform = 'translateY(' + scroll * 0.4 + 'px) scale(1.1)';
-        });
-    </script>
+<div class="full-divider"></div>
+
+<!-- ═══ PHOTOS ════════════════════════════════════════════════════ -->
+<section id="photos">
+  <div class="section-wrap">
+    <p class="sec-eyebrow" data-aos="fade-right">Galeria</p>
+    <h2 class="sec-title" data-aos="fade-up">Fotos</h2>
+
+    <div class="photos-grid">
+      <!-- Row 1: wide + tall -->
+      <div class="photo-item feat-wide" data-aos="fade-up" data-aos-delay="0">
+        <img src="caa803fc-0055-453b-ab57-4a9daac49641.jpg"
+             alt="LOWZZADA live set — crowd"
+             style="object-position: center 30%;">
+      </div>
+      <div class="photo-item feat-tall" data-aos="fade-up" data-aos-delay="150">
+        <img src="6f72290a-3bba-4a50-8ace-632aadd9bf35.jpg"
+             alt="LOWZZADA — club neon"
+             style="object-position: center 25%;">
+      </div>
+      <!-- Row 2: 3 x col-4 -->
+      <div class="photo-item col-4" data-aos="fade-up" data-aos-delay="0">
+        <img src="cee3e389-8a67-4415-92ae-8f2f4a40e1f1.jpg"
+             alt="LOWZZADA — DJ booth"
+             style="object-position: center 20%;">
+      </div>
+      <div class="photo-item col-4" data-aos="fade-up" data-aos-delay="120">
+        <img src="d8d2a87c-ac7a-458a-9688-d3373aab5a1f.jpg"
+             alt="LOWZZADA — performance"
+             style="object-position: center 15%;">
+      </div>
+      <div class="photo-item col-4" data-aos="fade-up" data-aos-delay="240">
+        <img src="13857a2a-44db-44c2-a91e-3b56ae20293d.jpg"
+             alt="LOWZZADA — beach club stage"
+             style="object-position: center center;">
+      </div>
+      <!-- Row 3: WhatsApp press photo full width -->
+      <div class="photo-item col-6" data-aos="fade-up" data-aos-delay="0">
+        <img src="WhatsApp_Image_2026-04-30_at_11_53_49.jpeg"
+             alt="LOWZZADA — press shot"
+             style="object-position: center 10%;">
+      </div>
+      <div class="photo-item col-6" data-aos="fade-up" data-aos-delay="120">
+        <img src="caa803fc-0055-453b-ab57-4a9daac49641.jpg"
+             alt="LOWZZADA — crowd energy"
+             style="object-position: center 60%;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- ═══ VIDEOS ════════════════════════════════════════════════════ -->
+<section id="videos">
+  <div class="section-wrap">
+    <p class="sec-eyebrow" data-aos="fade-right">Sessions</p>
+    <h2 class="sec-title" data-aos="fade-up">Live Sets</h2>
+
+    <div class="videos-grid">
+      <!-- YouTube featured -->
+      <div class="video-card feat" data-aos="fade-up" data-aos-delay="0">
+        <div class="embed-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/F0Le1khJZX8?rel=0&modestbranding=1&color=white"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+            title="LOWZZADA — Live Set">
+          </iframe>
+        </div>
+      </div>
+      <!-- Local video 1 -->
+      <div class="video-card" data-aos="fade-up" data-aos-delay="0">
+        <div class="embed-wrap">
+          <video controls playsinline preload="metadata"
+                 poster="caa803fc-0055-453b-ab57-4a9daac49641.jpg">
+            <source src="IMG_0419.MOV" type="video/mp4">
+            <source src="mp4.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <!-- Local video 2 -->
+      <div class="video-card" data-aos="fade-up" data-aos-delay="150">
+        <div class="embed-wrap">
+          <video controls playsinline preload="metadata"
+                 poster="cee3e389-8a67-4415-92ae-8f2f4a40e1f1.jpg">
+            <source src="IMG_3768.MOV" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <!-- Local video 3 -->
+      <div class="video-card" data-aos="fade-up" data-aos-delay="0">
+        <div class="embed-wrap">
+          <video controls playsinline preload="metadata"
+                 poster="d8d2a87c-ac7a-458a-9688-d3373aab5a1f.jpg">
+            <source src="WhatsApp_Video_2026-04-30_at_11_26_30.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <!-- Local video 4 -->
+      <div class="video-card" data-aos="fade-up" data-aos-delay="150">
+        <div class="embed-wrap">
+          <video controls playsinline preload="metadata"
+                 poster="13857a2a-44db-44c2-a91e-3b56ae20293d.jpg">
+            <source src="WhatsApp_Video_2026-04-30_at_11_34_47.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- ═══ GIGS ══════════════════════════════════════════════════════ -->
+<section id="gigs">
+  <div class="section-wrap">
+    <p class="sec-eyebrow" data-aos="fade-right">Eventos</p>
+    <h2 class="sec-title" data-aos="fade-up">Gig Archive</h2>
+
+    <div class="gigs-grid">
+      <div class="gig-card" data-aos="fade-up" data-aos-delay="0">
+        <img src="WhatsApp_Image_2026-04-30_at_11_53_49.jpeg"
+             alt="Silk Beach Club — LOWZZADA"
+             style="object-position: center top;">
+      </div>
+      <div class="gig-card" data-aos="fade-up" data-aos-delay="100">
+        <img src="5e93562e-b33f-4952-9ed3-b335f07399f4.jpg"
+             alt="Privilege Búzios — Sunset to Sunrise"
+             style="object-position: center top;">
+      </div>
+      <div class="gig-card" data-aos="fade-up" data-aos-delay="200">
+        <img src="6f72290a-3bba-4a50-8ace-632aadd9bf35.jpg"
+             alt="LOWZZADA — Club Night"
+             style="object-position: center 20%;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- ═══ MUSIC ═════════════════════════════════════════════════════ -->
+<section id="music">
+  <div class="section-wrap narrow">
+    <p class="sec-eyebrow" data-aos="fade-right">Streams</p>
+    <h2 class="sec-title" data-aos="fade-up">Música</h2>
+
+    <!-- SoundCloud -->
+    <div class="music-embed-wrap" data-aos="fade-up" data-aos-delay="100">
+      <iframe
+        allow="autoplay"
+        src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/diogo-diogo-693807927&color=%2300ffcc&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+        height="450"
+        scrolling="no">
+      </iframe>
+    </div>
+
+    <!-- Spotify -->
+    <div class="spotify-wrap" data-aos="fade-up" data-aos-delay="150">
+      <iframe
+        src="https://open.spotify.com/embed/artist/15zGa5VqskvlDw63uocEcs?utm_source=generator&theme=0"
+        width="100%"
+        height="152"
+        frameborder="0"
+        allowtransparency="true"
+        allow="encrypted-media"
+        loading="lazy"
+        title="LOWZZADA no Spotify">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- ═══ CONNECT ═══════════════════════════════════════════════════ -->
+<section id="connect">
+  <div class="section-wrap" style="text-align:center;">
+    <p class="sec-eyebrow" data-aos="fade-up" style="justify-content:center;">Redes & Booking</p>
+    <h2 class="connect-big" data-aos="fade-up" data-aos-delay="80">Let's<br/>Connect</h2>
+    <p class="connect-sub" data-aos="fade-up" data-aos-delay="160">Booking · Parcerias · Shows</p>
+
+    <div class="social-row" data-aos="fade-up" data-aos-delay="240">
+
+      <!-- Instagram -->
+      <a class="social-btn ig"
+         href="https://www.instagram.com/lowzzada_dj"
+         target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Instagram
+      </a>
+
+      <!-- SoundCloud -->
+      <a class="social-btn sc"
+         href="https://soundcloud.com/diogo-diogo-693807927"
+         target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c-.009-.06-.05-.1-.1-.1m-.899.828c-.06 0-.091.037-.104.094L0 14.479l.172 1.308c.013.06.045.094.104.094.056 0 .09-.037.103-.094l.195-1.308-.195-1.332c-.013-.058-.047-.094-.104-.094m1.81-.7c-.069 0-.12.054-.127.125l-.198 2.001.198 1.926c.007.07.058.125.127.125.066 0 .12-.056.127-.125l.224-1.926-.224-2.001c-.008-.07-.06-.125-.127-.125m.91-.156c-.082 0-.148.065-.153.15l-.18 2.132.18 2.034c.006.084.071.148.153.148.08 0 .147-.065.153-.148l.204-2.034-.204-2.132c-.007-.085-.073-.15-.153-.15m.935-.104c-.096 0-.172.076-.176.174l-.16 2.236.16 2.093c.004.097.08.172.176.172.094 0 .172-.075.177-.172l.183-2.093-.183-2.236c-.005-.098-.083-.174-.177-.174m.924-.048c-.11 0-.196.087-.2.197l-.14 2.284.14 2.16c.004.11.09.196.2.196.108 0 .194-.086.198-.196l.16-2.16-.16-2.284c-.004-.11-.09-.197-.198-.197m.92-.03c-.123 0-.219.1-.221.224l-.122 2.314.122 2.195c.003.122.1.22.22.22.121 0 .218-.098.221-.22l.138-2.195-.138-2.314c-.003-.124-.1-.224-.221-.224m.926-.02c-.136 0-.242.11-.244.249l-.104 2.334.104 2.214c.002.137.108.248.244.248.134 0 .24-.111.243-.248l.117-2.214-.117-2.334c-.003-.14-.11-.249-.243-.249m.924-.004c-.15 0-.267.12-.27.274l-.086 2.338.086 2.228c.003.152.12.271.27.271.148 0 .264-.12.267-.271l.098-2.228-.098-2.338c-.003-.154-.12-.274-.267-.274m.928.026c-.177 0-.314.14-.316.322l-.053 2.307.053 2.243c.002.181.14.32.316.32.175 0 .311-.14.314-.32l.059-2.243-.059-2.307c-.003-.182-.14-.322-.314-.322m5.194-1.07c-.07 0-.14.006-.21.018-.186-2.15-2.008-3.82-4.207-3.82-.573 0-1.12.11-1.613.31-.195.075-.247.153-.249.22v7.553c.002.07.056.128.126.134h6.153c.57 0 1.033-.46 1.033-1.033 0-.572-.463-1.037-1.033-1.037"/></svg>
+        SoundCloud
+      </a>
+
+      <!-- YouTube -->
+      <a class="social-btn yt"
+         href="https://youtu.be/F0Le1khJZX8"
+         target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        YouTube
+      </a>
+
+      <!-- Spotify -->
+      <a class="social-btn sp"
+         href="https://open.spotify.com/intl-pt/artist/15zGa5VqskvlDw63uocEcs"
+         target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Spotify
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════ -->
+<footer>
+  <span class="footer-logo">LOWZZADA</span>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/lowzzada_dj" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://soundcloud.com/diogo-diogo-693807927" target="_blank" rel="noopener">SoundCloud</a>
+    <a href="https://youtu.be/F0Le1khJZX8" target="_blank" rel="noopener">YouTube</a>
+  </div>
+  <span class="footer-copy">© 2026 LOWZZADA · Rio de Janeiro</span>
+</footer>
+
+<!-- ═══ SCRIPTS ════════════════════════════════════════════════════ -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  /* ── AOS init ── */
+  AOS.init({
+    duration: 900,
+    once: true,
+    easing: 'ease-out-quart',
+    offset: 60
+  });
+
+  /* ── Nav scroll state ── */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  }, { passive: true });
+
+  /* ── Mobile nav ── */
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+  function closeNav() {
+    document.getElementById('navLinks').classList.remove('open');
+  }
+
+  /* ── Hero video parallax (subtle) ── */
+  const heroVid = document.getElementById('heroVid');
+  if (heroVid) {
+    window.addEventListener('scroll', () => {
+      const s = window.scrollY;
+      if (s < window.innerHeight) {
+        heroVid.style.transform = `translateY(${s * 0.28}px) scale(1.04)`;
+      }
+    }, { passive: true });
+  }
+</script>
 </body>
 </html>
