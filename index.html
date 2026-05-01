@@ -1,1213 +1,469 @@
-<!DOCTYPE html>
+Bash
+
+python3 << 'PYEOF'
+css = r"""
+:root{--bg:#07070e;--bg2:#0a0a14;--surface:#0d0d1a;--border:rgba(255,255,255,0.07);--border-hi:rgba(255,255,255,0.13);--accent:#3ecfbe;--accent-lo:rgba(62,207,190,0.12);--accent-md:rgba(62,207,190,0.28);--purple:#7c5cfc;--text:#ebebf5;--text-lo:rgba(235,235,245,0.5);--muted:#3a3a50;--ease:cubic-bezier(0.22,1,0.36,1);--fH:'Bebas Neue',sans-serif;--fB:'Jost',sans-serif;--fM:'Space Mono',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--fB);font-weight:300;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img,video{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+input,textarea,button{font-family:var(--fB)}
+button{cursor:pointer;border:none;background:none}
+::-webkit-scrollbar{width:2px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--accent)}
+body::before{content:'';position:fixed;inset:0;z-index:9000;pointer-events:none;opacity:.028;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:1.5rem 5%;transition:background .5s,border-color .5s;border-bottom:1px solid transparent}
+#nav.solid{background:rgba(7,7,14,.95);backdrop-filter:blur(28px) saturate(1.5);border-color:var(--border)}
+.nav-logo{font-family:var(--fH);font-size:1.5rem;letter-spacing:.18em;color:var(--text);opacity:0}
+.nav-links{display:flex;gap:2rem;list-style:none;opacity:0}
+.nav-links a{font-family:var(--fM);font-size:.57rem;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);position:relative;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--accent);transition:width .4s var(--ease)}
+.nav-links a:hover{color:var(--accent)}
+.nav-links a:hover::after{width:100%}
+.nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;border:none;background:none}
+.nav-burger span{display:block;width:24px;height:1px;background:var(--text);transition:all .35s}
+.nav-burger.active span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.nav-burger.active span:nth-child(2){opacity:0}
+.nav-burger.active span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+/* HERO */
+#hero{position:relative;height:100svh;min-height:640px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.hero-video-layer{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hero-video-layer video{width:100%;height:100%;object-fit:cover;opacity:.45;filter:contrast(1.12) brightness(.72) saturate(.85);transform:scale(1.08);will-change:transform}
+.hero-video-layer::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(7,7,14,1) 0%,rgba(7,7,14,.55) 30%,transparent 60%),linear-gradient(to right,rgba(7,7,14,.65) 0%,transparent 50%),linear-gradient(to bottom,rgba(7,7,14,.5) 0%,transparent 20%)}
+.hero-glow{position:absolute;z-index:1;pointer-events:none;border-radius:50%;filter:blur(80px);opacity:0}
+.g1{width:60vw;height:60vw;top:-10%;left:20%;background:radial-gradient(ellipse,rgba(62,207,190,.06) 0%,transparent 70%)}
+.g2{width:50vw;height:50vw;bottom:0;right:-5%;background:radial-gradient(ellipse,rgba(124,92,252,.07) 0%,transparent 70%)}
+.hero-content{position:relative;z-index:2;padding:0 5% 6.5rem;width:100%}
+.hero-eyebrow{font-family:var(--fM);font-size:.6rem;letter-spacing:.44em;text-transform:uppercase;color:var(--accent);margin-bottom:1.4rem;opacity:0;transform:translateY(16px)}
+.hero-title{font-family:var(--fH);font-size:clamp(5.5rem,18vw,19rem);line-height:.82;letter-spacing:-.01em;overflow:hidden}
+.hero-title-inner{display:block;color:var(--text);transform:translateY(110%)}
+.hero-title em{font-style:normal;-webkit-text-stroke:1.5px rgba(255,255,255,.2);color:transparent}
+.hero-sub{margin-top:2.4rem;display:flex;align-items:flex-start;gap:3rem;flex-wrap:wrap;opacity:0;transform:translateY(20px)}
+.hero-tagline{font-family:var(--fB);font-size:.82rem;font-weight:200;color:var(--text-lo);letter-spacing:.1em;line-height:1.7;max-width:320px}
+.hero-tags{display:flex;gap:.5rem;flex-wrap:wrap}
+.htag{font-family:var(--fM);font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;padding:.3rem .85rem;border:1px solid var(--accent-md);color:rgba(62,207,190,.7);border-radius:1px;transition:border-color .3s,color .3s,background .3s}
+.htag:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-lo)}
+.hero-cue{position:absolute;bottom:3rem;right:5%;z-index:2;display:flex;flex-direction:column;align-items:center;gap:.6rem;opacity:0}
+.cue-bar{width:1px;height:64px;background:linear-gradient(to bottom,var(--accent),transparent);animation:cue-pulse 2.4s ease-in-out infinite}
+.cue-txt{font-family:var(--fM);font-size:.47rem;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl}
+.ticker-outer{position:absolute;bottom:0;left:0;right:0;z-index:3;border-top:1px solid var(--border);overflow:hidden;background:rgba(7,7,14,.72);backdrop-filter:blur(16px);padding:.7rem 0}
+.ticker-track{display:flex;width:max-content;animation:ticker-scroll 32s linear infinite}
+.ticker-item{font-family:var(--fM);font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 2.5rem}
+.ticker-item em{font-style:normal;color:var(--accent);margin-right:.8rem}
+
+/* LAYOUT */
+.wrap{max-width:1340px;margin:0 auto;padding:9rem 5%}
+.wrap.sm{max-width:1100px}
+.rule{width:100%;height:1px;background:var(--border)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:4.5rem}
+.eyebrow{font-family:var(--fM);font-size:.56rem;letter-spacing:.4em;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem;display:flex;align-items:center;gap:1rem}
+.eyebrow::before{content:'';width:1.8rem;height:1px;background:var(--accent);opacity:.5}
+.sec-title{font-family:var(--fH);font-size:clamp(3rem,6.5vw,6.5rem);line-height:.86;letter-spacing:.03em;text-transform:uppercase;color:var(--text)}
+.sec-num{font-family:var(--fM);font-size:.52rem;letter-spacing:.18em;color:var(--muted);align-self:flex-end}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:340px 1fr;gap:8rem;align-items:start}
+.pillar-word{font-family:var(--fH);font-size:clamp(4.5rem,8vw,8rem);line-height:.84;letter-spacing:.02em;text-transform:uppercase;display:block}
+.pillar-word.solid{color:var(--text)}
+.pillar-word.stroke{-webkit-text-stroke:1.5px rgba(255,255,255,.18);color:transparent}
+.pillar-word.hi{color:var(--accent)}
+.pillar-meta{margin-top:2.8rem;padding-top:2.8rem;border-top:1px solid var(--border)}
+.meta-label{font-family:var(--fM);font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.meta-val{font-family:var(--fH);font-size:1.3rem;letter-spacing:.1em;color:var(--text)}
+.bio-pull{font-size:1.08rem;font-weight:400;color:rgba(235,235,245,.88);line-height:1.9;border-left:2px solid var(--accent);padding-left:1.6rem;margin-bottom:2.2rem}
+.bio-body{font-size:.95rem;font-weight:300;color:var(--text-lo);line-height:2;margin-bottom:1.5rem}
+.bio-body strong{color:var(--text);font-weight:500}
+.venue-wrap{margin-top:3rem;padding-top:2.5rem;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:.5rem}
+.vpill{font-family:var(--fM);font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;padding:.36rem .88rem;border:1px solid var(--border);color:var(--muted);border-radius:1px;transition:border-color .35s,color .35s}
+.vpill:hover{border-color:var(--accent);color:var(--accent)}
+
+/* PHOTOS */
+.photos-masonry{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
+.pf{position:relative;overflow:hidden;background:var(--surface)}
+.pf-8x10{grid-column:span 8;aspect-ratio:16/10}
+.pf-4x5{grid-column:span 4;aspect-ratio:4/5}
+.pf-4x5b{grid-column:span 4;aspect-ratio:3/4}
+.pf-5x10{grid-column:span 5;aspect-ratio:4/5}
+.pf-7x10{grid-column:span 7;aspect-ratio:16/10}
+.pf img{width:100%;height:100%;object-fit:cover;transition:transform 1.5s var(--ease),filter .6s;filter:brightness(.84) saturate(.95);will-change:transform}
+.pf:hover img{transform:scale(1.07);filter:brightness(1) saturate(1.05)}
+.pf::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(7,7,14,.45) 0%,transparent 55%);opacity:0;pointer-events:none;transition:opacity .5s}
+.pf:hover::after{opacity:1}
+
+/* VIDEOS */
+.vid-top{display:grid;grid-template-columns:1.45fr 1fr;gap:12px;margin-bottom:12px}
+.vid-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.vc{position:relative;overflow:hidden;background:#000;border:1px solid var(--border);border-radius:2px;transition:border-color .4s}
+.vc:hover{border-color:var(--accent-md)}
+.vc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:2;background:linear-gradient(90deg,var(--accent),var(--purple))}
+.vc-inner{position:relative;aspect-ratio:16/9}
+.vc-inner iframe,.vc-inner video{position:absolute;inset:0;width:100%;height:100%;border:none;display:block}
+.vc-inner video{object-fit:cover}
+
+/* GIGS */
+.gigs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.gf{position:relative;overflow:hidden;aspect-ratio:9/16;background:var(--surface);border:1px solid var(--border);border-radius:2px;transition:border-color .4s,transform .5s var(--ease),box-shadow .5s}
+.gf:hover{border-color:rgba(62,207,190,.3);transform:translateY(-8px);box-shadow:0 24px 70px rgba(0,0,0,.7)}
+.gf img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease),filter .5s;filter:brightness(.9)}
+.gf:hover img{transform:scale(1.05);filter:brightness(1.04)}
+.gf-label{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:1.2rem 1rem .9rem;background:linear-gradient(to top,rgba(7,7,14,.85),transparent);font-family:var(--fM);font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.55);opacity:0;transition:opacity .4s}
+.gf:hover .gf-label{opacity:1}
+
+/* MUSIC */
+.music-layout{display:grid;grid-template-columns:1fr 380px;gap:3.5rem;align-items:start}
+.sc-card{position:relative;overflow:hidden;border:1px solid var(--border);border-radius:3px;background:var(--surface)}
+.sc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:1;background:linear-gradient(90deg,var(--accent),var(--purple))}
+.sc-card iframe{display:block;width:100%;border:none}
+.plat-label{font-family:var(--fM);font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem}
+.plat-list{display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem}
+.plat-link{display:flex;align-items:center;gap:1.2rem;padding:1.05rem 1.4rem;border:1px solid var(--border);border-radius:2px;background:var(--surface);transition:border-color .35s,background .35s,transform .35s var(--ease)}
+.plat-link:hover{transform:translateX(6px)}
+.plat-link.sc:hover{border-color:#ff5500;background:rgba(255,85,0,.06)}
+.plat-link.yt:hover{border-color:#f00;background:rgba(255,0,0,.06)}
+.plat-link.sp:hover{border-color:#1db954;background:rgba(29,185,84,.06)}
+.plat-link.sc svg,.plat-link.sc .pl-name{color:#ff5500}
+.plat-link.yt svg,.plat-link.yt .pl-name{color:#f00}
+.plat-link.sp svg,.plat-link.sp .pl-name{color:#1db954}
+.plat-link svg{width:18px;height:18px;fill:currentColor;flex-shrink:0}
+.pl-name{font-family:var(--fM);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase}
+.pl-arrow{margin-left:auto;font-family:var(--fM);font-size:.5rem;letter-spacing:.1em;color:var(--muted)}
+.sp-mini{border:1px solid var(--border);border-radius:3px;overflow:hidden}
+.sp-mini iframe{display:block;width:100%;border:none}
+
+/* BOOKING */
+#booking{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.booking-layout{display:grid;grid-template-columns:1fr 1fr;gap:7rem;align-items:start}
+.booking-tagline{font-family:var(--fH);font-size:clamp(3rem,6vw,6rem);line-height:.86;letter-spacing:.03em;text-transform:uppercase;color:var(--text);margin-bottom:2.5rem}
+.booking-tagline em{font-style:normal;color:var(--accent)}
+.booking-detail{display:flex;align-items:flex-start;gap:1.2rem;margin-bottom:1.5rem}
+.bd-icon{width:36px;height:36px;border:1px solid var(--border);border-radius:1px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bd-icon svg{width:15px;height:15px;stroke:var(--accent);fill:none;stroke-width:1.5}
+.bd-label{font-family:var(--fM);font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem}
+.bd-val{font-size:.92rem;color:var(--text);font-weight:400}
+.bd-val a{transition:color .3s}
+.bd-val a:hover{color:var(--accent)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{margin-bottom:1rem}
+.form-label{font-family:var(--fM);font-size:.5rem;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.5rem}
+.form-input,.form-textarea{width:100%;padding:.9rem 1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:2px;color:var(--text);font-size:.9rem;font-weight:300;outline:none;transition:border-color .35s,box-shadow .35s;-webkit-appearance:none}
+.form-input:focus,.form-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-lo)}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--muted);font-size:.85rem}
+.form-textarea{resize:vertical;min-height:120px}
+.form-submit{margin-top:.5rem;display:inline-flex;align-items:center;gap:.8rem;padding:1.05rem 2.2rem;background:var(--accent);color:var(--bg);font-family:var(--fM);font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;border-radius:2px;border:none;transition:background .35s,transform .35s var(--ease),box-shadow .35s;cursor:pointer}
+.form-submit:hover{background:#5ddfd0;transform:translateY(-2px);box-shadow:0 10px 40px rgba(62,207,190,.3)}
+.form-submit svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.form-note{margin-top:1rem;font-family:var(--fM);font-size:.5rem;letter-spacing:.18em;color:var(--muted)}
+
+/* CONNECT */
+#connect{text-align:center}
+.connect-inner{padding:8rem 5%}
+.connect-head{font-family:var(--fH);font-size:clamp(4rem,12vw,13rem);line-height:.83;letter-spacing:.01em;text-transform:uppercase;color:var(--text);margin-bottom:1.2rem}
+.connect-head em{font-style:normal;-webkit-text-stroke:1.5px rgba(255,255,255,.18);color:transparent}
+.connect-sub{font-family:var(--fM);font-size:.6rem;letter-spacing:.38em;text-transform:uppercase;color:var(--muted);margin-bottom:4rem}
+.soc-row{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
+.soc-btn{display:inline-flex;align-items:center;gap:.7rem;padding:1rem 1.9rem;font-family:var(--fM);font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text);border:1px solid var(--border);border-radius:2px;transition:border-color .35s,color .35s,transform .35s var(--ease),box-shadow .35s;position:relative;overflow:hidden}
+.soc-btn::before{content:'';position:absolute;inset:0;background:currentColor;opacity:0;transition:opacity .35s}
+.soc-btn:hover{transform:translateY(-3px)}
+.soc-btn:hover::before{opacity:.06}
+.soc-btn svg{width:14px;height:14px;fill:currentColor;flex-shrink:0;position:relative}
+.soc-btn span{position:relative}
+.soc-btn.ig:hover{border-color:#e1306c;color:#e1306c;box-shadow:0 10px 35px rgba(225,48,108,.2)}
+.soc-btn.sc:hover{border-color:#ff5500;color:#ff5500;box-shadow:0 10px 35px rgba(255,85,0,.2)}
+.soc-btn.yt:hover{border-color:#f00;color:#f00;box-shadow:0 10px 35px rgba(255,0,0,.2)}
+.soc-btn.sp:hover{border-color:#1db954;color:#1db954;box-shadow:0 10px 35px rgba(29,185,84,.2)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2.5rem 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:var(--fH);font-size:.95rem;letter-spacing:.2em;color:var(--muted)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-family:var(--fM);font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);transition:color .3s}
+.footer-links a:hover{color:var(--accent)}
+.footer-copy{font-family:var(--fM);font-size:.5rem;letter-spacing:.14em;color:var(--muted)}
+
+/* KEYFRAMES */
+@keyframes cue-pulse{0%,100%{opacity:.3;transform:scaleY(.9)}50%{opacity:1;transform:scaleY(1.1)}}
+@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* RESPONSIVE */
+@media(max-width:1100px){.about-grid{grid-template-columns:1fr;gap:5rem}.music-layout{grid-template-columns:1fr}.booking-layout{grid-template-columns:1fr;gap:4rem}.vid-top{grid-template-columns:1fr}.vid-row{grid-template-columns:repeat(2,1fr)}.gigs-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){#nav{padding:1.2rem 5%}.nav-links{display:none}.nav-burger{display:flex}.nav-links.open{display:flex;flex-direction:column;position:fixed;inset:0;background:rgba(7,7,14,.98);backdrop-filter:blur(28px);justify-content:center;align-items:center;gap:3rem;z-index:490}.nav-links.open a{font-size:.85rem;color:var(--text)}.wrap{padding:6rem 5%}.hero-cue{display:none}.photos-masonry{grid-template-columns:1fr 1fr;gap:8px}.pf-8x10{grid-column:span 2}.pf-4x5,.pf-4x5b,.pf-5x10,.pf-7x10{grid-column:span 1;aspect-ratio:3/4}.vid-row{grid-template-columns:1fr}.gigs-grid{grid-template-columns:repeat(2,1fr)}.form-row{grid-template-columns:1fr}footer{flex-direction:column;text-align:center}.footer-links{justify-content:center}}
+@media(max-width:480px){.photos-masonry{grid-template-columns:1fr}.pf-8x10{grid-column:span 1}.gigs-grid{grid-template-columns:1fr}.connect-head{font-size:clamp(3.2rem,14vw,6rem)}}
+"""
+
+# SVG icons as Python strings to avoid shell escaping issues
+ig_svg = '<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>'
+sc_svg = '<path d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c-.009-.06-.05-.1-.1-.1m-.899.828c-.06 0-.091.037-.104.094L0 14.479l.172 1.308c.013.06.045.094.104.094.056 0 .09-.037.103-.094l.195-1.308-.195-1.332c-.013-.058-.047-.094-.104-.094m1.81-.7c-.069 0-.12.054-.127.125l-.198 2.001.198 1.926c.007.07.058.125.127.125.066 0 .12-.056.127-.125l.224-1.926-.224-2.001c-.008-.07-.06-.125-.127-.125m.91-.156c-.082 0-.148.065-.153.15l-.18 2.132.18 2.034c.006.084.071.148.153.148.08 0 .147-.065.153-.148l.204-2.034-.204-2.132c-.007-.085-.073-.15-.153-.15m.935-.104c-.096 0-.172.076-.176.174l-.16 2.236.16 2.093c.004.097.08.172.176.172.094 0 .172-.075.177-.172l.183-2.093-.183-2.236c-.005-.098-.083-.174-.177-.174m.924-.048c-.11 0-.196.087-.2.197l-.14 2.284.14 2.16c.004.11.09.196.2.196.108 0 .194-.086.198-.196l.16-2.16-.16-2.284c-.004-.11-.09-.197-.198-.197m.92-.03c-.123 0-.219.1-.221.224l-.122 2.314.122 2.195c.003.122.1.22.22.22.121 0 .218-.098.221-.22l.138-2.195-.138-2.314c-.003-.124-.1-.224-.221-.224m.926-.02c-.136 0-.242.11-.244.249l-.104 2.334.104 2.214c.002.137.108.248.244.248.134 0 .24-.111.243-.248l.117-2.214-.117-2.334c-.003-.14-.11-.249-.243-.249m.924-.004c-.15 0-.267.12-.27.274l-.086 2.338.086 2.228c.003.152.12.271.27.271.148 0 .264-.12.267-.271l.098-2.228-.098-2.338c-.003-.154-.12-.274-.267-.274m.924.005c-.163 0-.29.13-.292.298l-.069 2.333.069 2.236c.002.168.13.298.292.298.16 0 .288-.13.29-.298l.077-2.236-.077-2.333c-.002-.168-.13-.298-.29-.298m.928.026c-.177 0-.314.14-.316.322l-.053 2.307.053 2.243c.002.181.14.32.316.32.175 0 .311-.14.314-.32l.059-2.243-.059-2.307c-.003-.182-.14-.322-.314-.322m5.194-1.07c-.07 0-.14.006-.21.018-.186-2.15-2.008-3.82-4.207-3.82-.573 0-1.12.11-1.613.31-.195.075-.247.153-.249.22v7.553c.002.07.056.128.126.134h6.153c.57 0 1.033-.46 1.033-1.033 0-.572-.463-1.037-1.033-1.037"/>'
+yt_svg = '<path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>'
+sp_svg = '<path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>'
+
+ticker_items = ["Privilege B\u00fazios","Silk Beach Club","Movida B\u00fazios","Fishbone B\u00fazios","Tundra Garden Friburgo","R\u00e9veillon Sunrise Mac\u00e9","Festa MUV Mac\u00e9","Onda M\u00e1xima Saquarema"]
+ticker_html = ""
+for t in ticker_items * 2:
+    ticker_html += f'<span class="ticker-item"><em>\u25c8</em>{t}</span>'
+
+html = f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LOWZZADA — DJ · Rio de Janeiro</title>
-  <meta name="description" content="O pulso do Tech House no litoral do Rio de Janeiro. House · Tech House · Minimal Tech · Indie Dance · Progressive House."/>
-  <meta property="og:title" content="LOWZZADA — DJ"/>
-  <meta property="og:description" content="O pulso do Tech House no litoral do Rio de Janeiro."/>
-  <meta name="theme-color" content="#06060a"/>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syncopate:wght@400;700&family=Jost:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
-
-  <style>
-  /* ═══════════════════════════════════════════════════════════════
-     TOKENS
-  ═══════════════════════════════════════════════════════════════ */
-  :root {
-    --bg:        #06060a;
-    --bg2:       #080810;
-    --surface:   #0c0c16;
-    --border:    rgba(255,255,255,0.065);
-    --border-hi: rgba(255,255,255,0.14);
-    --accent:    #3ecfbe;
-    --accent-dim:rgba(62,207,190,0.18);
-    --accent2:   #8b5cf6;
-    --text:      #eaeaf2;
-    --text-dim:  rgba(234,234,242,0.55);
-    --muted:     #40404e;
-    --ease:      cubic-bezier(0.25, 1, 0.35, 1);
-    --ease-in:   cubic-bezier(0.55, 0, 1, 0.45);
-    --fh:        'Bebas Neue', sans-serif;
-    --fs:        'Syncopate', sans-serif;
-    --fb:        'Jost', sans-serif;
-    --fm:        'Space Mono', monospace;
-  }
-
-  /* ═══════════════════════════════════════════════════════════════
-     RESET
-  ═══════════════════════════════════════════════════════════════ */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; font-size: 16px; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--fb);
-    font-weight: 300;
-    line-height: 1.7;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><circle cx="5" cy="5" r="5" fill="%233ecfbe" opacity="0.9"/></svg>') 5 5, auto;
-  }
-  img, video { display: block; max-width: 100%; }
-  a { text-decoration: none; color: inherit; }
-
-  /* ═══════════════════════════════════════════════════════════════
-     GRAIN
-  ═══════════════════════════════════════════════════════════════ */
-  body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: 9999;
-    pointer-events: none; opacity: 0.032;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-size: 200px 200px;
-  }
-
-  /* ═══════════════════════════════════════════════════════════════
-     SCROLLBAR
-  ═══════════════════════════════════════════════════════════════ */
-  ::-webkit-scrollbar { width: 2px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--accent); }
-
-  /* ═══════════════════════════════════════════════════════════════
-     NAV
-  ═══════════════════════════════════════════════════════════════ */
-  #nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 500;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 1.6rem 4%;
-    transition: background 0.5s var(--ease), backdrop-filter 0.5s, border-color 0.5s;
-    border-bottom: 1px solid transparent;
-  }
-  #nav.scrolled {
-    background: rgba(6,6,10,0.94);
-    backdrop-filter: blur(24px) saturate(1.4);
-    border-color: var(--border);
-  }
-  .nav-logo {
-    font-family: var(--fh);
-    font-size: 1.65rem;
-    letter-spacing: 0.16em;
-    color: var(--text);
-  }
-  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-  .nav-links a {
-    font-family: var(--fm);
-    font-size: 0.58rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--muted);
-    position: relative;
-    transition: color 0.35s;
-  }
-  .nav-links a::after {
-    content: '';
-    position: absolute; bottom: -4px; left: 0;
-    width: 0; height: 1px;
-    background: var(--accent);
-    transition: width 0.4s var(--ease);
-  }
-  .nav-links a:hover { color: var(--accent); }
-  .nav-links a:hover::after { width: 100%; }
-  .nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-  .nav-burger span { display: block; width: 24px; height: 1px; background: var(--text); transition: all 0.35s; }
-
-  /* ═══════════════════════════════════════════════════════════════
-     HERO
-  ═══════════════════════════════════════════════════════════════ */
-  #hero {
-    position: relative;
-    height: 100svh; min-height: 620px;
-    display: flex; flex-direction: column;
-    justify-content: flex-end;
-    overflow: hidden;
-  }
-
-  /* ── video layer ── */
-  .hero-media {
-    position: absolute; inset: 0; z-index: 0;
-    overflow: hidden;
-  }
-  .hero-media video {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    opacity: 0.48;
-    filter: contrast(1.1) brightness(0.75) saturate(0.9);
-    transform: scale(1.06);
-    will-change: transform;
-  }
-  /* cinematic overlays */
-  .hero-media::before {
-    content: '';
-    position: absolute; inset: 0; z-index: 1;
-    background:
-      linear-gradient(to top,  rgba(6,6,10,1) 0%, rgba(6,6,10,0.45) 35%, transparent 65%),
-      linear-gradient(to right, rgba(6,6,10,0.55) 0%, transparent 55%);
-  }
-  /* scanline texture */
-  .hero-media::after {
-    content: '';
-    position: absolute; inset: 0; z-index: 1;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.04) 2px,
-      rgba(0,0,0,0.04) 4px
-    );
-    pointer-events: none;
-  }
-
-  /* ── content ── */
-  .hero-content {
-    position: relative; z-index: 2;
-    padding: 0 4% 5.5rem;
-    width: 100%;
-  }
-  .hero-eyebrow {
-    font-family: var(--fm);
-    font-size: 0.6rem; letter-spacing: 0.42em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1.2rem;
-    opacity: 0; transform: translateY(14px);
-    animation: A-up 0.9s var(--ease) 0.3s forwards;
-  }
-  .hero-name {
-    font-family: var(--fh);
-    font-size: clamp(5.5rem, 19vw, 19rem);
-    line-height: 0.84;
-    letter-spacing: -0.01em;
-    color: var(--text);
-    opacity: 0; transform: translateY(40px);
-    animation: A-up 1.1s var(--ease) 0.5s forwards;
-  }
-  .hero-name em {
-    font-style: normal;
-    -webkit-text-stroke: 1.5px rgba(255,255,255,0.22);
-    color: transparent;
-  }
-  .hero-row {
-    margin-top: 2.2rem;
-    display: flex; align-items: center;
-    gap: 3rem; flex-wrap: wrap;
-    opacity: 0;
-    animation: A-fade 1s ease 1s forwards;
-  }
-  .hero-tagline {
-    font-family: var(--fb);
-    font-size: 0.8rem; font-weight: 300;
-    color: var(--text-dim);
-    letter-spacing: 0.08em;
-    line-height: 1.65;
-    max-width: 340px;
-  }
-  .hero-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .h-tag {
-    font-family: var(--fm);
-    font-size: 0.55rem; letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 0.32rem 0.85rem;
-    border: 1px solid rgba(62,207,190,0.28);
-    color: rgba(62,207,190,0.72);
-    border-radius: 1px;
-    transition: border-color 0.35s, color 0.35s, background 0.35s;
-    cursor: default;
-  }
-  .h-tag:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-dim);
-  }
-
-  /* ── scroll cue ── */
-  .hero-cue {
-    position: absolute; bottom: 2.8rem; right: 4%; z-index: 2;
-    display: flex; flex-direction: column;
-    align-items: center; gap: 0.7rem;
-    opacity: 0; animation: A-fade 1s ease 1.8s forwards;
-  }
-  .cue-line {
-    width: 1px; height: 60px;
-    background: linear-gradient(to bottom, var(--accent), transparent);
-    animation: pulse-line 2.4s ease-in-out infinite;
-  }
-  .cue-label {
-    font-family: var(--fm);
-    font-size: 0.48rem; letter-spacing: 0.35em;
-    text-transform: uppercase; color: var(--muted);
-    writing-mode: vertical-rl;
-  }
-
-  /* ── ticker ── */
-  .ticker-wrap {
-    position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
-    overflow: hidden;
-    border-top: 1px solid var(--border);
-    background: rgba(6,6,10,0.7);
-    backdrop-filter: blur(12px);
-    padding: 0.75rem 0;
-  }
-  .ticker-track {
-    display: flex; gap: 0;
-    animation: ticker 28s linear infinite;
-    width: max-content;
-  }
-  .ticker-item {
-    font-family: var(--fm);
-    font-size: 0.58rem; letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--muted);
-    white-space: nowrap;
-    padding: 0 3rem;
-  }
-  .ticker-item span { color: var(--accent); margin-right: 1rem; }
-
-  /* ═══════════════════════════════════════════════════════════════
-     LAYOUT UTILITIES
-  ═══════════════════════════════════════════════════════════════ */
-  .wrap {
-    max-width: 1340px;
-    margin: 0 auto;
-    padding: 8rem 4%;
-  }
-  .wrap.tight { max-width: 1100px; }
-  .wrap.flush { padding-top: 0; }
-
-  .rule { width: 100%; height: 1px; background: var(--border); }
-
-  /* section header */
-  .sh {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 4rem;
-  }
-  .sh-left {}
-  .eyebrow {
-    font-family: var(--fm);
-    font-size: 0.58rem; letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.6rem;
-    display: flex; align-items: center; gap: 1rem;
-  }
-  .eyebrow::before {
-    content: '';
-    width: 2rem; height: 1px;
-    background: var(--accent); opacity: 0.55;
-  }
-  .sec-title {
-    font-family: var(--fh);
-    font-size: clamp(2.8rem, 6vw, 6rem);
-    line-height: 0.88;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    color: var(--text);
-  }
-  .sh-index {
-    font-family: var(--fm);
-    font-size: 0.55rem; letter-spacing: 0.2em;
-    color: var(--muted);
-    align-self: flex-end;
-  }
-
-  /* reveal */
-  .rv {
-    opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.85s var(--ease), transform 0.85s var(--ease);
-  }
-  .rv.in { opacity: 1; transform: translateY(0); }
-  .rv.d1 { transition-delay: 0.08s; }
-  .rv.d2 { transition-delay: 0.16s; }
-  .rv.d3 { transition-delay: 0.24s; }
-  .rv.d4 { transition-delay: 0.32s; }
-  .rv.d5 { transition-delay: 0.40s; }
-  .rv.d6 { transition-delay: 0.48s; }
-
-  /* ═══════════════════════════════════════════════════════════════
-     ABOUT
-  ═══════════════════════════════════════════════════════════════ */
-  .about-layout {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 7rem;
-    align-items: start;
-  }
-
-  /* statement column */
-  .about-statement {}
-  .statement-word {
-    font-family: var(--fh);
-    font-size: clamp(5rem, 9vw, 8.5rem);
-    line-height: 0.85;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: var(--text);
-    display: block;
-  }
-  .statement-word.stroke {
-    -webkit-text-stroke: 1.5px rgba(255,255,255,0.2);
-    color: transparent;
-  }
-  .statement-word.accent { color: var(--accent); }
-  .about-origin {
-    margin-top: 2.5rem;
-    padding-top: 2.5rem;
-    border-top: 1px solid var(--border);
-  }
-  .origin-label {
-    font-family: var(--fm);
-    font-size: 0.55rem; letter-spacing: 0.28em;
-    text-transform: uppercase; color: var(--muted);
-    margin-bottom: 0.5rem;
-  }
-  .origin-val {
-    font-family: var(--fh);
-    font-size: 1.4rem; letter-spacing: 0.12em;
-    color: var(--text);
-  }
-
-  /* bio column */
-  .about-bio {}
-  .bio-lead {
-    font-size: 1.1rem; font-weight: 400;
-    color: rgba(234,234,242,0.88);
-    line-height: 1.9;
-    margin-bottom: 2rem;
-    border-left: 2px solid var(--accent);
-    padding-left: 1.6rem;
-  }
-  .bio-body {
-    font-size: 0.96rem; font-weight: 300;
-    color: var(--text-dim);
-    line-height: 2;
-    margin-bottom: 1.4rem;
-  }
-  .bio-body strong { color: var(--text); font-weight: 500; }
-
-  /* venues ticker */
-  .venues-row {
-    margin-top: 3rem;
-    padding-top: 2.5rem;
-    border-top: 1px solid var(--border);
-    display: flex; flex-wrap: wrap; gap: 0.6rem;
-  }
-  .venue-pill {
-    font-family: var(--fm);
-    font-size: 0.55rem; letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 0.38rem 0.9rem;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    border-radius: 1px;
-    cursor: default;
-    transition: border-color 0.35s, color 0.35s;
-  }
-  .venue-pill:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* ═══════════════════════════════════════════════════════════════
-     A) ARTIST PHOTOS
-  ═══════════════════════════════════════════════════════════════ */
-  .photos-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-auto-rows: min-content;
-    gap: 10px;
-  }
-  /* layout map */
-  .p-feat  { grid-column: span 8; aspect-ratio: 16/10; }
-  .p-side  { grid-column: span 4; aspect-ratio: 4/5; }
-  .p-third { grid-column: span 4; aspect-ratio: 3/4; }
-
-  .photo-frame {
-    position: relative; overflow: hidden;
-    background: var(--surface);
-  }
-  .photo-frame img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 1.6s var(--ease), filter 0.6s;
-    filter: brightness(0.85) saturate(0.95);
-    will-change: transform;
-  }
-  .photo-frame:hover img {
-    transform: scale(1.07);
-    filter: brightness(1) saturate(1.05);
-  }
-  .photo-frame::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(6,6,10,0.4) 0%, transparent 50%);
-    pointer-events: none;
-    opacity: 0; transition: opacity 0.5s;
-  }
-  .photo-frame:hover::after { opacity: 1; }
-
-  /* ═══════════════════════════════════════════════════════════════
-     B) VIDEOS
-  ═══════════════════════════════════════════════════════════════ */
-  .videos-layout {
-    display: grid;
-    gap: 12px;
-  }
-  /* featured row */
-  .vids-top {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  /* secondary row */
-  .vids-bottom {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  .vid-card {
-    position: relative; overflow: hidden;
-    background: #000;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-  }
-  .vid-card::before {
-    content: ''; position: absolute;
-    top: 0; left: 0; right: 0; height: 2px; z-index: 2;
-    background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 100%);
-  }
-  .vid-aspect {
-    position: relative;
-    aspect-ratio: 16/9;
-  }
-  .vid-aspect iframe,
-  .vid-aspect video {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    border: none; display: block;
-  }
-  .vid-aspect video { object-fit: cover; }
-  .vid-aspect.tall { aspect-ratio: 9/16; }
-
-  /* ═══════════════════════════════════════════════════════════════
-     C) GIGS / EVENTS
-  ═══════════════════════════════════════════════════════════════ */
-  .gigs-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-  .gig-frame {
-    position: relative; overflow: hidden;
-    aspect-ratio: 9/16;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    background: var(--surface);
-    transition: border-color 0.4s, transform 0.5s var(--ease), box-shadow 0.5s;
-  }
-  .gig-frame:hover {
-    border-color: rgba(62,207,190,0.32);
-    transform: translateY(-7px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(62,207,190,0.1);
-  }
-  .gig-frame img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 1.2s var(--ease), filter 0.5s;
-    filter: brightness(0.92);
-  }
-  .gig-frame:hover img { transform: scale(1.04); filter: brightness(1); }
-
-  /* ═══════════════════════════════════════════════════════════════
-     MUSIC
-  ═══════════════════════════════════════════════════════════════ */
-  .music-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: start;
-  }
-  .sc-embed {
-    position: relative;
-    border: 1px solid var(--border); border-radius: 3px;
-    overflow: hidden; background: var(--surface);
-  }
-  .sc-embed::before {
-    content: ''; position: absolute;
-    top: 0; left: 0; right: 0; height: 2px; z-index: 1;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-  }
-  .sc-embed iframe { display: block; width: 100%; border: none; }
-
-  .music-right {}
-  .platform-links {
-    display: flex; flex-direction: column; gap: 0.9rem;
-    margin-bottom: 2.5rem;
-  }
-  .plat-btn {
-    display: flex; align-items: center; gap: 1.2rem;
-    padding: 1.1rem 1.5rem;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    background: var(--surface);
-    transition: border-color 0.35s, background 0.35s, transform 0.35s var(--ease);
-  }
-  .plat-btn:hover { transform: translateX(6px); }
-  .plat-btn.sc:hover  { border-color: #ff5500; background: rgba(255,85,0,0.06); }
-  .plat-btn.yt:hover  { border-color: #ff0000; background: rgba(255,0,0,0.06); }
-  .plat-btn.sp:hover  { border-color: #1db954; background: rgba(29,185,84,0.06); }
-  .plat-btn svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
-  .plat-btn.sc { color: #ff5500; }
-  .plat-btn.yt { color: #ff0000; }
-  .plat-btn.sp { color: #1db954; }
-  .plat-btn-label {
-    font-family: var(--fm);
-    font-size: 0.62rem; letter-spacing: 0.22em;
-    text-transform: uppercase; color: var(--text);
-  }
-  .plat-btn-sub {
-    margin-left: auto;
-    font-family: var(--fm);
-    font-size: 0.52rem; letter-spacing: 0.15em;
-    text-transform: uppercase; color: var(--muted);
-  }
-  .spotify-mini {
-    border: 1px solid var(--border); border-radius: 3px; overflow: hidden;
-  }
-  .spotify-mini iframe { display: block; width: 100%; border: none; }
-
-  /* ═══════════════════════════════════════════════════════════════
-     CONNECT
-  ═══════════════════════════════════════════════════════════════ */
-  #connect { text-align: center; }
-  .connect-wrap { padding: 7rem 4%; }
-  .connect-big {
-    font-family: var(--fh);
-    font-size: clamp(4rem, 12vw, 13rem);
-    line-height: 0.84;
-    text-transform: uppercase; letter-spacing: 0.01em;
-    color: var(--text);
-    margin-bottom: 1.5rem;
-  }
-  .connect-big em {
-    font-style: normal;
-    -webkit-text-stroke: 1.5px rgba(255,255,255,0.2);
-    color: transparent;
-  }
-  .connect-sub {
-    font-family: var(--fm);
-    font-size: 0.62rem; letter-spacing: 0.38em;
-    text-transform: uppercase; color: var(--muted);
-    margin-bottom: 4.5rem;
-  }
-  .soc-row {
-    display: flex; justify-content: center;
-    gap: 1.2rem; flex-wrap: wrap;
-  }
-  .soc-btn {
-    display: inline-flex; align-items: center; gap: 0.7rem;
-    padding: 1rem 2rem;
-    font-family: var(--fm);
-    font-size: 0.6rem; letter-spacing: 0.22em;
-    text-transform: uppercase; color: var(--text);
-    border: 1px solid var(--border); border-radius: 2px;
-    transition: border-color 0.35s, color 0.35s, transform 0.35s var(--ease), box-shadow 0.35s;
-    position: relative; overflow: hidden;
-  }
-  .soc-btn::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: currentColor; opacity: 0;
-    transition: opacity 0.35s;
-  }
-  .soc-btn:hover { transform: translateY(-3px); }
-  .soc-btn:hover::before { opacity: 0.05; }
-  .soc-btn svg { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; position: relative; }
-  .soc-btn span { position: relative; }
-  .soc-btn.ig:hover  { border-color: #e1306c; color: #e1306c; box-shadow: 0 8px 30px rgba(225,48,108,0.18); }
-  .soc-btn.sc:hover  { border-color: #ff5500; color: #ff5500; box-shadow: 0 8px 30px rgba(255,85,0,0.18); }
-  .soc-btn.yt:hover  { border-color: #ff0000; color: #ff0000; box-shadow: 0 8px 30px rgba(255,0,0,0.18); }
-  .soc-btn.sp:hover  { border-color: #1db954; color: #1db954; box-shadow: 0 8px 30px rgba(29,185,84,0.18); }
-
-  /* ═══════════════════════════════════════════════════════════════
-     FOOTER
-  ═══════════════════════════════════════════════════════════════ */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 2.5rem 4%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap; gap: 1rem;
-  }
-  .footer-logo {
-    font-family: var(--fh);
-    font-size: 1rem; letter-spacing: 0.18em;
-    color: var(--muted);
-  }
-  .footer-links { display: flex; gap: 2.5rem; }
-  .footer-links a {
-    font-family: var(--fm);
-    font-size: 0.52rem; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--muted);
-    transition: color 0.3s;
-  }
-  .footer-links a:hover { color: var(--accent); }
-  .footer-copy {
-    font-family: var(--fm);
-    font-size: 0.52rem; letter-spacing: 0.15em;
-    color: var(--muted);
-  }
-
-  /* ═══════════════════════════════════════════════════════════════
-     KEYFRAMES
-  ═══════════════════════════════════════════════════════════════ */
-  @keyframes A-up {
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes A-fade {
-    to { opacity: 1; }
-  }
-  @keyframes pulse-line {
-    0%,100% { opacity: 0.3; transform: scaleY(0.9); }
-    50%      { opacity: 1;   transform: scaleY(1.1); }
-  }
-  @keyframes ticker {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-
-  /* ═══════════════════════════════════════════════════════════════
-     RESPONSIVE
-  ═══════════════════════════════════════════════════════════════ */
-  @media (max-width: 1024px) {
-    .about-layout { grid-template-columns: 1fr; gap: 4rem; }
-    .music-layout { grid-template-columns: 1fr; }
-    .vids-top  { grid-template-columns: 1fr; }
-    .vids-bottom { grid-template-columns: repeat(2,1fr); }
-  }
-
-  @media (max-width: 768px) {
-    .nav-links { display: none; }
-    .nav-burger { display: flex; }
-    .nav-links.open {
-      display: flex; flex-direction: column;
-      position: fixed; inset: 0;
-      background: rgba(6,6,10,0.98);
-      backdrop-filter: blur(28px);
-      justify-content: center; align-items: center;
-      gap: 3rem; z-index: 490;
-    }
-    .nav-links.open a { font-size: 0.8rem; color: var(--text); }
-
-    .wrap { padding: 5rem 5%; }
-    .hero-name { font-size: clamp(4rem,18vw,8rem); }
-    .hero-cue { display: none; }
-
-    /* photos */
-    .photos-grid { grid-template-columns: 1fr 1fr; }
-    .p-feat  { grid-column: span 2; aspect-ratio: 16/10; }
-    .p-side  { grid-column: span 1; aspect-ratio: 3/4; }
-    .p-third { grid-column: span 1; aspect-ratio: 3/4; }
-
-    .vids-bottom { grid-template-columns: 1fr; }
-    .gigs-grid   { grid-template-columns: repeat(2,1fr); }
-
-    footer { flex-direction: column; text-align: center; }
-    .footer-links { justify-content: center; }
-  }
-
-  @media (max-width: 480px) {
-    .photos-grid { grid-template-columns: 1fr; }
-    .p-feat, .p-side, .p-third { grid-column: span 1; aspect-ratio: 16/10; }
-    .gigs-grid { grid-template-columns: 1fr; }
-    .connect-big { font-size: clamp(3.5rem,14vw,6rem); }
-    .soc-btn { padding: 0.85rem 1.4rem; }
-  }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LOWZZADA \u2014 Official DJ Site \u00b7 Rio de Janeiro</title>
+<meta name="description" content="O pulso do Tech House no litoral do Rio de Janeiro. Booking: diogolowzzada@gmail.com"/>
+<meta property="og:title" content="LOWZZADA \u2014 DJ"/>
+<meta name="theme-color" content="#07070e"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Jost:ital,wght@0,200;0,300;0,400;0,500;1,200&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>{css}</style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════════════
-     NAV
-══════════════════════════════════════════════════════════════ -->
 <nav id="nav">
   <a href="#" class="nav-logo">LOWZZADA</a>
   <ul class="nav-links" id="navLinks">
-    <li><a href="#about"   onclick="closeMenu()">Sobre</a></li>
-    <li><a href="#photos"  onclick="closeMenu()">Fotos</a></li>
-    <li><a href="#videos"  onclick="closeMenu()">Vídeos</a></li>
-    <li><a href="#gigs"    onclick="closeMenu()">Gigs</a></li>
-    <li><a href="#music"   onclick="closeMenu()">Música</a></li>
-    <li><a href="#connect" onclick="closeMenu()">Contato</a></li>
+    <li><a href="#about" onclick="closeNav()">Sobre</a></li>
+    <li><a href="#photos" onclick="closeNav()">Fotos</a></li>
+    <li><a href="#videos" onclick="closeNav()">V\u00eddeos</a></li>
+    <li><a href="#gigs" onclick="closeNav()">Gigs</a></li>
+    <li><a href="#music" onclick="closeNav()">M\u00fasica</a></li>
+    <li><a href="#booking" onclick="closeNav()">Booking</a></li>
   </ul>
-  <button class="nav-burger" id="burger" onclick="toggleMenu()" aria-label="Menu">
+  <button class="nav-burger" id="burger" onclick="toggleNav()" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<!-- ══════════════════════════════════════════════════════════════
-     HERO
-══════════════════════════════════════════════════════════════ -->
 <section id="hero">
-
-  <div class="hero-media">
-    <video autoplay muted loop playsinline id="heroVid" preload="auto">
-      <source src="IMG_7476.MOV"  type="video/mp4">
-      <source src="WhatsApp_Video_2026-04-30_at_11_34_47.mp4" type="video/mp4">
-      <!-- image fallback via CSS if video fails -->
+  <div class="hero-video-layer">
+    <video id="heroVid" autoplay muted loop playsinline preload="auto">
+      <source src="IMG_7476.MOV" type="video/mp4">
+      <source src="video.mp4" type="video/mp4">
+      <source src="video2.mp4" type="video/mp4">
     </video>
   </div>
-
+  <div class="hero-glow g1" id="glow1"></div>
+  <div class="hero-glow g2" id="glow2"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow">Rio de Janeiro · DJ · Electronic Music</p>
-    <h1 class="hero-name">LOW<em>ZZA</em>DA</h1>
-    <div class="hero-row">
-      <p class="hero-tagline">
-        O pulso do Tech House<br/>
-        no litoral do Rio de Janeiro
-      </p>
+    <p class="hero-eyebrow" id="heroEyebrow">Rio de Janeiro \u00b7 DJ \u00b7 Electronic Music</p>
+    <h1 class="hero-title" aria-label="LOWZZADA"><span class="hero-title-inner">LOW<em>ZZA</em>DA</span></h1>
+    <div class="hero-sub" id="heroSub">
+      <p class="hero-tagline">O pulso do Tech House<br/>no litoral do Rio de Janeiro</p>
       <div class="hero-tags">
-        <span class="h-tag">House</span>
-        <span class="h-tag">Tech House</span>
-        <span class="h-tag">Minimal Tech</span>
-        <span class="h-tag">Indie Dance</span>
-        <span class="h-tag">Progressive</span>
+        <span class="htag">House</span>
+        <span class="htag">Tech House</span>
+        <span class="htag">Minimal Tech</span>
+        <span class="htag">Indie Dance</span>
+        <span class="htag">Progressive</span>
       </div>
     </div>
   </div>
-
-  <div class="hero-cue">
-    <div class="cue-line"></div>
-    <span class="cue-label">Scroll</span>
-  </div>
-
-  <!-- venue ticker -->
-  <div class="ticker-wrap">
-    <div class="ticker-track" id="ticker">
-      <span class="ticker-item"><span>◈</span> Privilege Búzios</span>
-      <span class="ticker-item"><span>◈</span> Silk Beach Club</span>
-      <span class="ticker-item"><span>◈</span> Movida Búzios</span>
-      <span class="ticker-item"><span>◈</span> Fishbone Búzios</span>
-      <span class="ticker-item"><span>◈</span> Tundra Garden Friburgo</span>
-      <span class="ticker-item"><span>◈</span> Réveillon Sunrise Macaé</span>
-      <span class="ticker-item"><span>◈</span> Festa MUV Macaé</span>
-      <span class="ticker-item"><span>◈</span> Onda Máxima Saquarema</span>
-      <!-- duplicate for seamless loop -->
-      <span class="ticker-item"><span>◈</span> Privilege Búzios</span>
-      <span class="ticker-item"><span>◈</span> Silk Beach Club</span>
-      <span class="ticker-item"><span>◈</span> Movida Búzios</span>
-      <span class="ticker-item"><span>◈</span> Fishbone Búzios</span>
-      <span class="ticker-item"><span>◈</span> Tundra Garden Friburgo</span>
-      <span class="ticker-item"><span>◈</span> Réveillon Sunrise Macaé</span>
-      <span class="ticker-item"><span>◈</span> Festa MUV Macaé</span>
-      <span class="ticker-item"><span>◈</span> Onda Máxima Saquarema</span>
-    </div>
-  </div>
-
+  <div class="hero-cue" id="heroCue"><div class="cue-bar"></div><span class="cue-txt">Scroll</span></div>
+  <div class="ticker-outer"><div class="ticker-track">{ticker_html}</div></div>
 </section>
 
 <div class="rule"></div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     ABOUT
-══════════════════════════════════════════════════════════════ -->
 <section id="about">
   <div class="wrap">
-    <div class="about-layout">
-
-      <!-- Left: visual statement -->
-      <div class="rv">
-        <span class="statement-word">TECH</span>
-        <span class="statement-word stroke">HOUSE</span>
-        <span class="statement-word accent">CULTURE</span>
-        <div class="about-origin">
-          <div class="origin-label">Base</div>
-          <div class="origin-val">Rio de Janeiro · Brasil</div>
+    <div class="about-grid">
+      <div class="about-pillar gsap-rv">
+        <span class="pillar-word solid">TECH</span>
+        <span class="pillar-word stroke">HOUSE</span>
+        <span class="pillar-word hi">CULTURE</span>
+        <div class="pillar-meta">
+          <div class="meta-label">Base</div>
+          <div class="meta-val">Rio de Janeiro \u00b7 Brasil</div>
         </div>
-        <div class="about-origin" style="margin-top:1.5rem;">
-          <div class="origin-label">Gêneros</div>
-          <div class="origin-val" style="font-size:0.95rem; line-height:1.6; font-family:var(--fm); letter-spacing:0.08em; color:var(--text-dim);">
-            House · Tech House<br/>
-            Minimal Tech · Indie Dance<br/>
-            Progressive House
-          </div>
+        <div class="pillar-meta">
+          <div class="meta-label">G\u00eaneros</div>
+          <div class="meta-val" style="font-size:.9rem;font-family:var(--fM);letter-spacing:.06em;color:var(--text-lo)">House \u00b7 Tech House<br/>Minimal Tech \u00b7 Indie Dance<br/>Progressive House</div>
         </div>
       </div>
-
-      <!-- Right: biography -->
-      <div>
-        <div class="sh rv d1">
-          <div class="sh-left">
-            <p class="eyebrow">Artista</p>
-            <h2 class="sec-title">O Artista</h2>
-          </div>
-          <span class="sh-index">01 / 05</span>
+      <div class="about-bio">
+        <div class="sec-head gsap-rv">
+          <div><p class="eyebrow">Artista</p><h2 class="sec-title">O Artista</h2></div>
+          <span class="sec-num">01</span>
         </div>
-
-        <p class="bio-lead rv d2">
-          Com uma identidade sonora marcada pelo groove constante e pela energia
-          contagiante do Tech House, <strong>LOWZZADA</strong> se consolida como
-          um dos principais nomes da cena eletrônica carioca.
-        </p>
-        <p class="bio-body rv d3">
-          Com raízes profundas na <strong>Região dos Lagos</strong>, traduz a sofisticação
-          e o estilo de vida praiano em sets que transitam entre <strong>House, Tech House</strong>
-          e <strong>Indie Dance</strong> — criando uma vibe única do início ao fim.
-        </p>
-        <p class="bio-body rv d4">
-          Natural do <strong>Rio de Janeiro</strong>, chama atenção por uma pesquisa musical
-          diferenciada que traz sons dançantes, inovadores e com identidade própria. Seus sets
-          conectam o público de forma genuína, construindo uma energia que cresce set após set,
-          noite após noite.
-        </p>
-        <p class="bio-body rv d5">
-          Já dividiu o palco com grandes DJs, artistas e produtores, consolidando sua presença
-          nos principais clubs e eventos do litoral fluminense.
-        </p>
-
-        <div class="venues-row rv d6">
-          <span class="venue-pill">Privilege Búzios</span>
-          <span class="venue-pill">Silk Beach Club</span>
-          <span class="venue-pill">Movida Búzios</span>
-          <span class="venue-pill">Fishbone Búzios</span>
-          <span class="venue-pill">Tundra Garden</span>
-          <span class="venue-pill">Réveillon Sunrise</span>
-          <span class="venue-pill">Festa MUV</span>
-          <span class="venue-pill">Onda Máxima</span>
+        <p class="bio-pull gsap-rv">Com uma identidade sonora marcada pelo groove constante e pela energia contagiante do Tech House, <strong>LOWZZADA</strong> se consolida como um dos principais nomes da cena eletr\u00f4nica carioca.</p>
+        <p class="bio-body gsap-rv">Com ra\u00edzes profundas na <strong>Regi\u00e3o dos Lagos</strong>, traduz a sofistica\u00e7\u00e3o e o estilo de vida praiano em sets que transitam entre <strong>House, Tech House</strong> e <strong>Indie Dance</strong>.</p>
+        <p class="bio-body gsap-rv">Com <strong>15+ anos</strong> de cena e mais de <strong>500 shows</strong> realizados, construiu uma trajet\u00f3ria marcada pela consist\u00eancia, pesquisa musical diferenciada e uma energia \u00fanica que conecta o p\u00fablico do in\u00edcio ao fim.</p>
+        <div class="venue-wrap gsap-rv">
+          <span class="vpill">Privilege B\u00fazios</span><span class="vpill">Silk Beach Club</span><span class="vpill">Movida B\u00fazios</span><span class="vpill">Fishbone B\u00fazios</span><span class="vpill">Tundra Garden</span><span class="vpill">R\u00e9veillon Sunrise</span><span class="vpill">Festa MUV</span><span class="vpill">Onda M\u00e1xima</span>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
 <div class="rule"></div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     A) ARTIST PHOTOS
-══════════════════════════════════════════════════════════════ -->
 <section id="photos">
-  <div class="wrap flush" style="padding-bottom:0;">
-    <div class="sh" style="padding-top:8rem; padding-left:0; padding-right:0;">
-      <div class="sh-left rv">
-        <p class="eyebrow">Galeria</p>
-        <h2 class="sec-title">Fotos</h2>
-      </div>
-      <span class="sh-index rv d2">02 / 05</span>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="gsap-rv"><p class="eyebrow">Galeria</p><h2 class="sec-title">Artist<br/>Photos</h2></div>
+      <span class="sec-num gsap-rv">02</span>
     </div>
   </div>
-
-  <div style="padding: 0 4% 8rem; max-width:1340px; margin:0 auto;">
-    <div class="photos-grid">
-
-      <!-- Row 1: featured + side -->
-      <div class="photo-frame p-feat rv">
-        <img src="caa803fc-0055-453b-ab57-4a9daac49641.jpg"
-             alt="LOWZZADA — live set outdoor"
-             style="object-position: center 30%;">
-      </div>
-      <div class="photo-frame p-side rv d2">
-        <img src="6f72290a-3bba-4a50-8ace-632aadd9bf35.jpg"
-             alt="LOWZZADA — club neon"
-             style="object-position: center 20%;">
-      </div>
-
-      <!-- Row 2: three thirds -->
-      <div class="photo-frame p-third rv">
-        <img src="cee3e389-8a67-4415-92ae-8f2f4a40e1f1.jpg"
-             alt="LOWZZADA — DJ booth crowd"
-             style="object-position: center 18%;">
-      </div>
-      <div class="photo-frame p-third rv d2">
-        <img src="d8d2a87c-ac7a-458a-9688-d3373aab5a1f.jpg"
-             alt="LOWZZADA — performance back"
-             style="object-position: center 15%;">
-      </div>
-      <div class="photo-frame p-third rv d3">
-        <img src="13857a2a-44db-44c2-a91e-3b56ae20293d.jpg"
-             alt="LOWZZADA — beach club stage"
-             style="object-position: center center;">
-      </div>
-
-      <!-- Row 3: side + featured -->
-      <div class="photo-frame p-side rv d1">
-        <img src="WhatsApp_Image_2026-04-30_at_11_53_49.jpeg"
-             alt="LOWZZADA — press photo"
-             style="object-position: center 8%;">
-      </div>
-      <div class="photo-frame p-feat rv d2">
-        <img src="caa803fc-0055-453b-ab57-4a9daac49641.jpg"
-             alt="LOWZZADA — crowd energy"
-             style="object-position: center 65%;">
-      </div>
-
+  <div style="padding:0 5% 9rem;max-width:1340px;margin:0 auto">
+    <div class="photos-masonry">
+      <div class="pf pf-8x10 gsap-img"><img src="movida.jpg" alt="LOWZZADA live outdoor" style="object-position:center 35%"></div>
+      <div class="pf pf-4x5 gsap-img"><img src="movida2.jpg" alt="LOWZZADA DJ booth" style="object-position:center 18%"></div>
+      <div class="pf pf-4x5b gsap-img"><img src="caa803fc-0055-453b-ab57-4a9daac49641.jpg" alt="LOWZZADA crowd" style="object-position:center 30%"></div>
+      <div class="pf pf-4x5b gsap-img"><img src="cee3e389-8a67-4415-92ae-8f2f4a40e1f1.jpg" alt="LOWZZADA back" style="object-position:center 18%"></div>
+      <div class="pf pf-4x5b gsap-img"><img src="image.jpeg" alt="LOWZZADA neon" style="object-position:center 20%"></div>
+      <div class="pf pf-5x10 gsap-img"><img src="d8d2a87c-ac7a-458a-9688-d3373aab5a1f.jpg" alt="LOWZZADA performance" style="object-position:center 12%"></div>
+      <div class="pf pf-7x10 gsap-img"><img src="green.jpg" alt="LOWZZADA beach club" style="object-position:center center"></div>
     </div>
   </div>
 </section>
 
 <div class="rule"></div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     B) VIDEOS / LIVE SESSIONS
-══════════════════════════════════════════════════════════════ -->
 <section id="videos">
   <div class="wrap">
-    <div class="sh">
-      <div class="sh-left rv">
-        <p class="eyebrow">Sessions</p>
-        <h2 class="sec-title">Live Sets</h2>
-      </div>
-      <span class="sh-index rv d2">03 / 05</span>
+    <div class="sec-head">
+      <div class="gsap-rv"><p class="eyebrow">Sessions</p><h2 class="sec-title">Live<br/>Sets</h2></div>
+      <span class="sec-num gsap-rv">03</span>
     </div>
-
-    <div class="videos-layout">
-      <!-- Top row: YouTube featured + local -->
-      <div class="vids-top">
-        <div class="vid-card rv">
-          <div class="vid-aspect">
-            <iframe
-              src="https://www.youtube.com/embed/F0Le1khJZX8?rel=0&modestbranding=1&color=white"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen loading="lazy"
-              title="LOWZZADA — Live Set">
-            </iframe>
-          </div>
-        </div>
-        <div class="vid-card rv d2">
-          <div class="vid-aspect">
-            <video controls playsinline preload="metadata"
-                   poster="cee3e389-8a67-4415-92ae-8f2f4a40e1f1.jpg">
-              <source src="IMG_0419.MOV" type="video/mp4">
-            </video>
-          </div>
+    <div class="vid-top">
+      <div class="vc gsap-rv">
+        <div class="vc-inner">
+          <iframe src="https://www.youtube.com/embed/F0Le1khJZX8?rel=0&modestbranding=1&color=white" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" title="LOWZZADA YouTube"></iframe>
         </div>
       </div>
-
-      <!-- Bottom row: 3 local sessions -->
-      <div class="vids-bottom">
-        <div class="vid-card rv">
-          <div class="vid-aspect">
-            <video controls playsinline preload="metadata"
-                   poster="d8d2a87c-ac7a-458a-9688-d3373aab5a1f.jpg">
-              <source src="IMG_3768.MOV" type="video/mp4">
-            </video>
-          </div>
-        </div>
-        <div class="vid-card rv d2">
-          <div class="vid-aspect">
-            <video controls playsinline preload="metadata"
-                   poster="caa803fc-0055-453b-ab57-4a9daac49641.jpg">
-              <source src="WhatsApp_Video_2026-04-30_at_11_26_30.mp4" type="video/mp4">
-            </video>
-          </div>
-        </div>
-        <div class="vid-card rv d3">
-          <div class="vid-aspect">
-            <video controls playsinline preload="metadata"
-                   poster="13857a2a-44db-44c2-a91e-3b56ae20293d.jpg">
-              <source src="WhatsApp_Video_2026-04-30_at_11_34_47.mp4" type="video/mp4">
-            </video>
-          </div>
-        </div>
-      </div>
-
-      <!-- Extra: IMG_0420 and mp4 -->
-      <div class="vids-bottom" style="margin-top:12px;">
-        <div class="vid-card rv">
-          <div class="vid-aspect">
-            <video controls playsinline preload="metadata"
-                   poster="6f72290a-3bba-4a50-8ace-632aadd9bf35.jpg">
-              <source src="IMG_0420.MOV" type="video/mp4">
-            </video>
-          </div>
-        </div>
-        <div class="vid-card rv d2">
-          <div class="vid-aspect">
-            <video controls playsinline preload="metadata"
-                   poster="cee3e389-8a67-4415-92ae-8f2f4a40e1f1.jpg">
-              <source src="mp4.mp4" type="video/mp4">
-            </video>
-          </div>
-        </div>
-        <div class="vid-card rv d3" style="background:var(--surface); border-style:dashed; display:flex; align-items:center; justify-content:center;">
-          <div style="text-align:center; padding:2rem;">
-            <p style="font-family:var(--fm); font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:0.8rem;">Assista no YouTube</p>
-            <a href="https://youtu.be/F0Le1khJZX8" target="_blank" rel="noopener"
-               style="font-family:var(--fh); font-size:1.1rem; letter-spacing:0.1em; color:var(--accent); display:inline-flex; align-items:center; gap:0.5rem; transition:gap 0.3s;">
-              @LOWZZADA
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-            </a>
-          </div>
+      <div class="vc gsap-rv">
+        <div class="vc-inner">
+          <video controls playsinline preload="metadata" poster="movida.jpg"><source src="mp4.mp4" type="video/mp4"></video>
         </div>
       </div>
     </div>
-
+    <div class="vid-row" style="margin-bottom:12px">
+      <div class="vc gsap-rv"><div class="vc-inner"><video controls playsinline preload="metadata" poster="movida2.jpg"><source src="video.mp4" type="video/mp4"></video></div></div>
+      <div class="vc gsap-rv"><div class="vc-inner"><video controls playsinline preload="metadata" poster="caa803fc-0055-453b-ab57-4a9daac49641.jpg"><source src="video2.mp4" type="video/mp4"></video></div></div>
+      <div class="vc gsap-rv"><div class="vc-inner"><video controls playsinline preload="metadata" poster="image.jpeg"><source src="IMG_3768.MOV" type="video/mp4"></video></div></div>
+    </div>
+    <div class="vid-row">
+      <div class="vc gsap-rv"><div class="vc-inner"><video controls playsinline preload="metadata" poster="green.jpg"><source src="WhatsApp_Video_2026-04-30_at_11_26_30.mp4" type="video/mp4"></video></div></div>
+      <div class="vc gsap-rv"><div class="vc-inner"><video controls playsinline preload="metadata" poster="cee3e389-8a67-4415-92ae-8f2f4a40e1f1.jpg"><source src="WhatsApp_Video_2026-04-30_at_11_34_47.mp4" type="video/mp4"></video></div></div>
+      <div class="vc gsap-rv" style="display:flex;align-items:center;justify-content:center;background:var(--surface)">
+        <div style="text-align:center;padding:2rem">
+          <p style="font-family:var(--fM);font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem">Mais no YouTube</p>
+          <a href="https://youtu.be/F0Le1khJZX8" target="_blank" rel="noopener" style="font-family:var(--fH);font-size:1.2rem;letter-spacing:.08em;color:var(--accent);display:inline-flex;align-items:center;gap:.5rem">@LOWZZADA <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <div class="rule"></div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     C) GIGS / EVENTS
-══════════════════════════════════════════════════════════════ -->
 <section id="gigs">
   <div class="wrap">
-    <div class="sh">
-      <div class="sh-left rv">
-        <p class="eyebrow">Eventos</p>
-        <h2 class="sec-title">Gig Archive</h2>
-      </div>
-      <span class="sh-index rv d2">04 / 05</span>
+    <div class="sec-head">
+      <div class="gsap-rv"><p class="eyebrow">Eventos</p><h2 class="sec-title">Gig<br/>Archive</h2></div>
+      <span class="sec-num gsap-rv">04</span>
     </div>
-
     <div class="gigs-grid">
-      <div class="gig-frame rv">
-        <img src="WhatsApp_Image_2026-04-30_at_11_53_49.jpeg"
-             alt="Silk Beach Club — LOWZZADA"
-             style="object-position: center top;">
-      </div>
-      <div class="gig-frame rv d2">
-        <img src="5e93562e-b33f-4952-9ed3-b335f07399f4.jpg"
-             alt="Privilege Búzios — Sunset to Sunrise"
-             style="object-position: center top;">
-      </div>
-      <div class="gig-frame rv d3">
-        <img src="6f72290a-3bba-4a50-8ace-632aadd9bf35.jpg"
-             alt="LOWZZADA — Club Night"
-             style="object-position: center 18%;">
-      </div>
+      <div class="gf gsap-img"><img src="fusca.jpg" alt="Privilege B\u00fazios" style="object-position:center top"><span class="gf-label">Privilege B\u00fazios \u00b7 2025</span></div>
+      <div class="gf gsap-img"><img src="WhatsApp_Image_2026-04-30_at_11_53_49.jpeg" alt="Silk Beach Club" style="object-position:center top"><span class="gf-label">Silk Beach Club</span></div>
+      <div class="gf gsap-img"><img src="5e93562e-b33f-4952-9ed3-b335f07399f4.jpg" alt="Privilege" style="object-position:center top"><span class="gf-label">Privilege B\u00fazios</span></div>
+      <div class="gf gsap-img"><img src="13857a2a-44db-44c2-a91e-3b56ae20293d.jpg" alt="Live Archive" style="object-position:center center"><span class="gf-label">Live Archive</span></div>
     </div>
   </div>
 </section>
 
 <div class="rule"></div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     MUSIC
-══════════════════════════════════════════════════════════════ -->
 <section id="music">
-  <div class="wrap tight">
-    <div class="sh">
-      <div class="sh-left rv">
-        <p class="eyebrow">Streams</p>
-        <h2 class="sec-title">Música</h2>
-      </div>
-      <span class="sh-index rv d2">05 / 05</span>
+  <div class="wrap sm">
+    <div class="sec-head">
+      <div class="gsap-rv"><p class="eyebrow">Streams</p><h2 class="sec-title">M\u00fasica</h2></div>
+      <span class="sec-num gsap-rv">05</span>
     </div>
-
     <div class="music-layout">
-
-      <!-- SoundCloud embed -->
-      <div class="sc-embed rv">
-        <iframe
-          allow="autoplay"
-          src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/diogo-diogo-693807927&color=%233ecfbe&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true"
-          height="500"
-          scrolling="no">
-        </iframe>
+      <div class="sc-card gsap-rv">
+        <iframe allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/diogo-diogo-693807927&color=%233ecfbe&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true" height="500" scrolling="no"></iframe>
       </div>
-
-      <!-- Right: platform links + spotify -->
-      <div class="music-right rv d2">
-        <p style="font-family:var(--fm); font-size:0.55rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--muted); margin-bottom:1.5rem;">Plataformas</p>
-        <div class="platform-links">
-          <a class="plat-btn sc" href="https://soundcloud.com/diogo-diogo-693807927"
-             target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24"><path d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c-.009-.06-.05-.1-.1-.1m-.899.828c-.06 0-.091.037-.104.094L0 14.479l.172 1.308c.013.06.045.094.104.094.056 0 .09-.037.103-.094l.195-1.308-.195-1.332c-.013-.058-.047-.094-.104-.094m1.81-.7c-.069 0-.12.054-.127.125l-.198 2.001.198 1.926c.007.07.058.125.127.125.066 0 .12-.056.127-.125l.224-1.926-.224-2.001c-.008-.07-.06-.125-.127-.125m.91-.156c-.082 0-.148.065-.153.15l-.18 2.132.18 2.034c.006.084.071.148.153.148.08 0 .147-.065.153-.148l.204-2.034-.204-2.132c-.007-.085-.073-.15-.153-.15m.935-.104c-.096 0-.172.076-.176.174l-.16 2.236.16 2.093c.004.097.08.172.176.172.094 0 .172-.075.177-.172l.183-2.093-.183-2.236c-.005-.098-.083-.174-.177-.174m.924-.048c-.11 0-.196.087-.2.197l-.14 2.284.14 2.16c.004.11.09.196.2.196.108 0 .194-.086.198-.196l.16-2.16-.16-2.284c-.004-.11-.09-.197-.198-.197m.92-.03c-.123 0-.219.1-.221.224l-.122 2.314.122 2.195c.003.122.1.22.22.22.121 0 .218-.098.221-.22l.138-2.195-.138-2.314c-.003-.124-.1-.224-.221-.224m.926-.02c-.136 0-.242.11-.244.249l-.104 2.334.104 2.214c.002.137.108.248.244.248.134 0 .24-.111.243-.248l.117-2.214-.117-2.334c-.003-.14-.11-.249-.243-.249m.924-.004c-.15 0-.267.12-.27.274l-.086 2.338.086 2.228c.003.152.12.271.27.271.148 0 .264-.12.267-.271l.098-2.228-.098-2.338c-.003-.154-.12-.274-.267-.274m.924.005c-.163 0-.29.13-.292.298l-.069 2.333.069 2.236c.002.168.13.298.292.298.16 0 .288-.13.29-.298l.077-2.236-.077-2.333c-.002-.168-.13-.298-.29-.298m.928.026c-.177 0-.314.14-.316.322l-.053 2.307.053 2.243c.002.181.14.32.316.32.175 0 .311-.14.314-.32l.059-2.243-.059-2.307c-.003-.182-.14-.322-.314-.322m5.194-1.07c-.07 0-.14.006-.21.018-.186-2.15-2.008-3.82-4.207-3.82-.573 0-1.12.11-1.613.31-.195.075-.247.153-.249.22v7.553c.002.07.056.128.126.134h6.153c.57 0 1.033-.46 1.033-1.033 0-.572-.463-1.037-1.033-1.037"/></svg>
-            <span class="plat-btn-label">SoundCloud</span>
-            <span class="plat-btn-sub">Ouça agora →</span>
-          </a>
-          <a class="plat-btn yt" href="https://youtu.be/F0Le1khJZX8"
-             target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            <span class="plat-btn-label">YouTube</span>
-            <span class="plat-btn-sub">Watch →</span>
-          </a>
-          <a class="plat-btn sp"
-             href="https://open.spotify.com/intl-pt/artist/15zGa5VqskvlDw63uocEcs"
-             target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-            <span class="plat-btn-label">Spotify</span>
-            <span class="plat-btn-sub">Stream →</span>
-          </a>
+      <div class="music-side gsap-rv">
+        <p class="plat-label">Plataformas</p>
+        <div class="plat-list">
+          <a class="plat-link sc" href="https://soundcloud.com/diogo-diogo-693807927" target="_blank" rel="noopener"><svg viewBox="0 0 24 24">{sc_svg}</svg><span class="pl-name">SoundCloud</span><span class="pl-arrow">Ou\u00e7a \u2192</span></a>
+          <a class="plat-link yt" href="https://youtu.be/F0Le1khJZX8" target="_blank" rel="noopener"><svg viewBox="0 0 24 24">{yt_svg}</svg><span class="pl-name">YouTube</span><span class="pl-arrow">Watch \u2192</span></a>
+          <a class="plat-link sp" href="https://open.spotify.com/intl-pt/artist/15zGa5VqskvlDw63uocEcs" target="_blank" rel="noopener"><svg viewBox="0 0 24 24">{sp_svg}</svg><span class="pl-name">Spotify</span><span class="pl-arrow">Stream \u2192</span></a>
         </div>
-
-        <!-- Spotify embed -->
-        <div class="spotify-mini rv d3">
-          <iframe
-            src="https://open.spotify.com/embed/artist/15zGa5VqskvlDw63uocEcs?utm_source=generator&theme=0"
-            width="100%" height="152"
-            frameborder="0" allowtransparency="true"
-            allow="encrypted-media" loading="lazy"
-            title="LOWZZADA no Spotify">
-          </iframe>
-        </div>
+        <div class="sp-mini"><iframe src="https://open.spotify.com/embed/artist/15zGa5VqskvlDw63uocEcs?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allowtransparency="true" allow="encrypted-media" loading="lazy"></iframe></div>
       </div>
-
     </div>
   </div>
 </section>
 
 <div class="rule"></div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     CONNECT
-══════════════════════════════════════════════════════════════ -->
-<section id="connect">
-  <div class="connect-wrap">
-    <p class="eyebrow rv" style="justify-content:center; margin-bottom:1.5rem;">
-      Booking & Redes Sociais
-    </p>
-    <h2 class="connect-big rv d1">
-      Let's<br/><em>Connect</em>
-    </h2>
-    <p class="connect-sub rv d2">Booking · Parcerias · Shows</p>
-
-    <div class="soc-row rv d3">
-
-      <a class="soc-btn ig"
-         href="https://www.instagram.com/lowzzada_dj"
-         target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        <span>Instagram</span>
-      </a>
-
-      <a class="soc-btn sc"
-         href="https://soundcloud.com/diogo-diogo-693807927"
-         target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c-.009-.06-.05-.1-.1-.1m-.899.828c-.06 0-.091.037-.104.094L0 14.479l.172 1.308c.013.06.045.094.104.094.056 0 .09-.037.103-.094l.195-1.308-.195-1.332c-.013-.058-.047-.094-.104-.094m1.81-.7c-.069 0-.12.054-.127.125l-.198 2.001.198 1.926c.007.07.058.125.127.125.066 0 .12-.056.127-.125l.224-1.926-.224-2.001c-.008-.07-.06-.125-.127-.125m.91-.156c-.082 0-.148.065-.153.15l-.18 2.132.18 2.034c.006.084.071.148.153.148.08 0 .147-.065.153-.148l.204-2.034-.204-2.132c-.007-.085-.073-.15-.153-.15m.935-.104c-.096 0-.172.076-.176.174l-.16 2.236.16 2.093c.004.097.08.172.176.172.094 0 .172-.075.177-.172l.183-2.093-.183-2.236c-.005-.098-.083-.174-.177-.174m.924-.048c-.11 0-.196.087-.2.197l-.14 2.284.14 2.16c.004.11.09.196.2.196.108 0 .194-.086.198-.196l.16-2.16-.16-2.284c-.004-.11-.09-.197-.198-.197m.92-.03c-.123 0-.219.1-.221.224l-.122 2.314.122 2.195c.003.122.1.22.22.22.121 0 .218-.098.221-.22l.138-2.195-.138-2.314c-.003-.124-.1-.224-.221-.224m.926-.02c-.136 0-.242.11-.244.249l-.104 2.334.104 2.214c.002.137.108.248.244.248.134 0 .24-.111.243-.248l.117-2.214-.117-2.334c-.003-.14-.11-.249-.243-.249m.924-.004c-.15 0-.267.12-.27.274l-.086 2.338.086 2.228c.003.152.12.271.27.271.148 0 .264-.12.267-.271l.098-2.228-.098-2.338c-.003-.154-.12-.274-.267-.274m.924.005c-.163 0-.29.13-.292.298l-.069 2.333.069 2.236c.002.168.13.298.292.298.16 0 .288-.13.29-.298l.077-2.236-.077-2.333c-.002-.168-.13-.298-.29-.298m.928.026c-.177 0-.314.14-.316.322l-.053 2.307.053 2.243c.002.181.14.32.316.32.175 0 .311-.14.314-.32l.059-2.243-.059-2.307c-.003-.182-.14-.322-.314-.322m5.194-1.07c-.07 0-.14.006-.21.018-.186-2.15-2.008-3.82-4.207-3.82-.573 0-1.12.11-1.613.31-.195.075-.247.153-.249.22v7.553c.002.07.056.128.126.134h6.153c.57 0 1.033-.46 1.033-1.033 0-.572-.463-1.037-1.033-1.037"/></svg>
-        <span>SoundCloud</span>
-      </a>
-
-      <a class="soc-btn yt"
-         href="https://youtu.be/F0Le1khJZX8"
-         target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        <span>YouTube</span>
-      </a>
-
-      <a class="soc-btn sp"
-         href="https://open.spotify.com/intl-pt/artist/15zGa5VqskvlDw63uocEcs"
-         target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-        <span>Spotify</span>
-      </a>
-
+<section id="booking">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="gsap-rv"><p class="eyebrow">Contato Profissional</p><h2 class="sec-title">Booking</h2></div>
+      <span class="sec-num gsap-rv">06</span>
+    </div>
+    <div class="booking-layout">
+      <div class="booking-info gsap-rv">
+        <h3 class="booking-tagline">Vamos fazer<br/><em>acontecer</em></h3>
+        <div class="booking-detail">
+          <div class="bd-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div><div class="bd-label">E-mail</div><div class="bd-val"><a href="mailto:diogolowzzada@gmail.com">diogolowzzada@gmail.com</a></div></div>
+        </div>
+        <div class="booking-detail">
+          <div class="bd-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l.72-.72a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div><div class="bd-label">WhatsApp</div><div class="bd-val"><a href="https://wa.me/5522999595882" target="_blank" rel="noopener">+55 (22) 99959-5882</a></div></div>
+        </div>
+        <div class="booking-detail">
+          <div class="bd-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+          <div><div class="bd-label">Instagram</div><div class="bd-val"><a href="https://www.instagram.com/lowzzada_dj" target="_blank" rel="noopener">@lowzzada_dj</a></div></div>
+        </div>
+        <p style="margin-top:2.5rem;font-family:var(--fM);font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);line-height:1.8">Dispon\u00edvel para: Shows \u00b7 Clubs \u00b7 Festivais<br/>Beach Clubs \u00b7 Eventos Privados</p>
+      </div>
+      <div class="booking-form gsap-rv">
+        <p style="font-family:var(--fM);font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:1.8rem">Enviar solicita\u00e7\u00e3o</p>
+        <form id="bookingForm" onsubmit="handleForm(event)">
+          <div class="form-row">
+            <div class="form-group"><label class="form-label" for="fname">Nome</label><input class="form-input" id="fname" type="text" name="name" placeholder="Seu nome" required></div>
+            <div class="form-group"><label class="form-label" for="femail">E-mail</label><input class="form-input" id="femail" type="email" name="email" placeholder="seu@email.com" required></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label" for="fdate">Data do Evento</label><input class="form-input" id="fdate" type="date" name="date"></div>
+            <div class="form-group"><label class="form-label" for="flocal">Local / Cidade</label><input class="form-input" id="flocal" type="text" name="location" placeholder="Ex: B\u00fazios, RJ"></div>
+          </div>
+          <div class="form-group"><label class="form-label" for="fmsg">Mensagem</label><textarea class="form-textarea" id="fmsg" name="message" placeholder="Descreva o evento, hor\u00e1rio e outras informa\u00e7\u00f5es relevantes..." required></textarea></div>
+          <button type="submit" class="form-submit"><span id="formBtnTxt">Enviar solicita\u00e7\u00e3o</span><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+          <p class="form-note" id="formMsg"></p>
+        </form>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════════════════
-     FOOTER
-══════════════════════════════════════════════════════════════ -->
+<div class="rule"></div>
+
+<section id="connect">
+  <div class="connect-inner">
+    <p class="eyebrow gsap-rv" style="justify-content:center;margin-bottom:1.5rem">Redes Sociais</p>
+    <h2 class="connect-head gsap-rv">Let\u2019s<br/><em>Connect</em></h2>
+    <p class="connect-sub gsap-rv">Booking \u00b7 Parcerias \u00b7 Shows</p>
+    <div class="soc-row gsap-rv">
+      <a class="soc-btn ig" href="https://www.instagram.com/lowzzada_dj" target="_blank" rel="noopener"><svg viewBox="0 0 24 24">{ig_svg}</svg><span>Instagram</span></a>
+      <a class="soc-btn sc" href="https://soundcloud.com/diogo-diogo-693807927" target="_blank" rel="noopener"><svg viewBox="0 0 24 24">{sc_svg}</svg><span>SoundCloud</span></a>
+      <a class="soc-btn yt" href="https://youtu.be/F0Le1khJZX8" target="_blank" rel="noopener"><svg viewBox="0 0 24 24">{yt_svg}</svg><span>YouTube</span></a>
+      <a class="soc-btn sp" href="https://open.spotify.com/intl-pt/artist/15zGa5VqskvlDw63uocEcs" target="_blank" rel="noopener"><svg viewBox="0 0 24 24">{sp_svg}</svg><span>Spotify</span></a>
+    </div>
+  </div>
+</section>
+
 <footer>
   <span class="footer-logo">LOWZZADA</span>
   <div class="footer-links">
@@ -1215,73 +471,108 @@
     <a href="https://soundcloud.com/diogo-diogo-693807927" target="_blank" rel="noopener">SoundCloud</a>
     <a href="https://youtu.be/F0Le1khJZX8" target="_blank" rel="noopener">YouTube</a>
     <a href="https://open.spotify.com/intl-pt/artist/15zGa5VqskvlDw63uocEcs" target="_blank" rel="noopener">Spotify</a>
+    <a href="mailto:diogolowzzada@gmail.com">Booking</a>
   </div>
-  <span class="footer-copy">© 2026 LOWZZADA · Rio de Janeiro</span>
+  <span class="footer-copy">\u00a9 2026 LOWZZADA \u00b7 Rio de Janeiro, Brasil</span>
 </footer>
 
-<!-- ══════════════════════════════════════════════════════════════
-     SCRIPTS
-══════════════════════════════════════════════════════════════ -->
 <script>
-/* ── Nav scroll ── */
-const nav = document.getElementById('nav');
-let lastY = 0;
-window.addEventListener('scroll', () => {
-  const y = window.scrollY;
-  nav.classList.toggle('scrolled', y > 50);
-  lastY = y;
-}, { passive: true });
+var nav=document.getElementById('nav');
+window.addEventListener('scroll',function(){{nav.classList.toggle('solid',window.scrollY>60)}},{{passive:true}});
+function toggleNav(){{var m=document.getElementById('navLinks'),b=document.getElementById('burger');m.classList.toggle('open');b.classList.toggle('active')}}
+function closeNav(){{document.getElementById('navLinks').classList.remove('open');document.getElementById('burger').classList.remove('active')}}
+function handleForm(e){{e.preventDefault();var f=e.target,name=f.name.value,email=f.email.value,date=f.date?f.date.value:'',loc=f.location?f.location.value:'',msg=f.message.value;var body='Nome: '+name+'\\nE-mail: '+email+'\\nData: '+date+'\\nLocal: '+loc+'\\n\\nMensagem:\\n'+msg;window.location.href='mailto:diogolowzzada@gmail.com?subject=Booking Request - '+encodeURIComponent(name)+'&body='+encodeURIComponent(body);document.getElementById('formMsg').textContent='\u2713 Abrindo seu e-mail...';document.getElementById('formMsg').style.color='#3ecfbe'}}
 
-/* ── Mobile menu ── */
-function toggleMenu() {
-  const l = document.getElementById('navLinks');
-  l.classList.toggle('open');
-}
-function closeMenu() {
-  document.getElementById('navLinks').classList.remove('open');
-}
+window.addEventListener('load',function(){{
+if(typeof gsap==='undefined'){{
+  var els=document.querySelectorAll('.gsap-rv,.gsap-img');
+  els.forEach(function(el){{el.style.opacity='0';el.style.transform='translateY(30px)';el.style.transition='opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)'}});
+  var io=new IntersectionObserver(function(entries){{entries.forEach(function(e){{if(e.isIntersecting){{e.target.style.opacity='1';e.target.style.transform='none';io.unobserve(e.target)}}}})}},{{threshold:.1}});
+  els.forEach(function(el){{io.observe(el)}});
+  var he=document.querySelector('.hero-eyebrow');if(he)he.style.cssText='opacity:1;transform:none;transition:all .8s ease .3s';
+  var ht=document.querySelector('.hero-title-inner');if(ht)ht.style.cssText='transform:none;transition:transform 1s cubic-bezier(.22,1,.36,1) .5s';
+  var hs=document.querySelector('.hero-sub');if(hs)hs.style.cssText='opacity:1;transform:none;transition:all .8s ease .9s';
+  var hc=document.querySelector('.hero-cue');if(hc)hc.style.opacity='1';
+  return;
+}}
 
-/* ── Hero video parallax ── */
-const heroVid = document.getElementById('heroVid');
-if (heroVid) {
-  window.addEventListener('scroll', () => {
-    const s = window.scrollY;
-    if (s < window.innerHeight * 1.2) {
-      heroVid.style.transform = `translateY(${s * 0.3}px) scale(1.06)`;
-    }
-  }, { passive: true });
-}
+gsap.registerPlugin(ScrollTrigger);
 
-/* ── Intersection Observer — reveal ── */
-const rvEls = document.querySelectorAll('.rv');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('in');
-      io.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-rvEls.forEach(el => io.observe(el));
+/* hero */
+var tl=gsap.timeline({{delay:.1}});
+tl.to('#glow1',{{opacity:1,duration:2.5,ease:'power2.out'}},0);
+tl.to('#glow2',{{opacity:1,duration:2.5,ease:'power2.out'}},.3);
+tl.to('.nav-logo',{{opacity:1,duration:.8,ease:'power2.out'}},.4);
+tl.to('.nav-links',{{opacity:1,duration:.8,ease:'power2.out'}},.5);
+tl.to('#heroEyebrow',{{opacity:1,y:0,duration:.9,ease:'power3.out'}},.35);
+tl.to('.hero-title-inner',{{y:'0%',duration:1.15,ease:'expo.out'}},.55);
+tl.to('#heroSub',{{opacity:1,y:0,duration:.9,ease:'power3.out'}},1.0);
+tl.to('#heroCue',{{opacity:1,duration:.8}},1.5);
 
-/* ── Ticker: clone for seamless loop ── */
-(function() {
-  const track = document.getElementById('ticker');
-  if (!track) return;
-  // Already duplicated in HTML — just let CSS run
-})();
+/* hero video parallax */
+var hv=document.getElementById('heroVid');
+if(hv){{gsap.to(hv,{{y:'28%',ease:'none',scrollTrigger:{{trigger:'#hero',start:'top top',end:'bottom top',scrub:true}}}})}}
 
-/* ── Video: mute-on-intersect (save bandwidth) ── */
-const allVids = document.querySelectorAll('.vid-aspect video');
-const vidIO = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    const v = e.target;
-    if (!e.isIntersecting) { v.pause(); } 
-    // don't autoplay, just pause when out of view
-  });
-}, { threshold: 0 });
-allVids.forEach(v => vidIO.observe(v));
+/* glow float */
+gsap.to('#glow1',{{y:-18,rotate:3,duration:7,ease:'sine.inOut',yoyo:true,repeat:-1}});
+gsap.to('#glow2',{{y:14,rotate:-2,duration:9,ease:'sine.inOut',yoyo:true,repeat:-1,delay:1.5}});
+
+/* scroll reveals */
+gsap.utils.toArray('.gsap-rv').forEach(function(el,i){{
+  gsap.fromTo(el,{{opacity:0,y:40}},{{opacity:1,y:0,duration:.9,ease:'power3.out',delay:(i%3)*.08,scrollTrigger:{{trigger:el,start:'top 88%',once:true}}}});
+}});
+
+/* image grid */
+gsap.utils.toArray('.gsap-img').forEach(function(el,i){{
+  gsap.fromTo(el,{{opacity:0,y:50,scale:.97}},{{opacity:1,y:0,scale:1,duration:1,ease:'power3.out',delay:(i%4)*.1,scrollTrigger:{{trigger:el,start:'top 90%',once:true}}}});
+}});
+
+/* photo parallax */
+gsap.utils.toArray('.pf img').forEach(function(img){{
+  gsap.to(img,{{y:'8%',ease:'none',scrollTrigger:{{trigger:img.parentElement,start:'top bottom',end:'bottom top',scrub:true}}}});
+}});
+
+/* titles */
+gsap.utils.toArray('.sec-title').forEach(function(t){{
+  gsap.fromTo(t,{{opacity:0,y:50,skewY:1.5}},{{opacity:1,y:0,skewY:0,duration:1.1,ease:'expo.out',scrollTrigger:{{trigger:t,start:'top 85%',once:true}}}});
+}});
+
+/* gig cards */
+gsap.fromTo('.gf',{{opacity:0,y:50,scale:.96}},{{opacity:1,y:0,scale:1,stagger:.1,duration:.9,ease:'power3.out',scrollTrigger:{{trigger:'.gigs-grid',start:'top 88%',once:true}}}});
+
+/* venue pills */
+gsap.fromTo('.vpill',{{opacity:0,scale:.85}},{{opacity:1,scale:1,stagger:.06,duration:.5,ease:'back.out(1.5)',scrollTrigger:{{trigger:'.venue-wrap',start:'top 90%',once:true}}}});
+
+/* pillar */
+gsap.fromTo('.pillar-word',{{opacity:0,x:-30}},{{opacity:1,x:0,stagger:.18,duration:.9,ease:'power3.out',scrollTrigger:{{trigger:'.about-pillar',start:'top 80%',once:true}}}});
+
+/* connect */
+gsap.fromTo('.connect-head',{{opacity:0,y:60,scale:.97}},{{opacity:1,y:0,scale:1,duration:1.2,ease:'expo.out',scrollTrigger:{{trigger:'.connect-head',start:'top 85%',once:true}}}});
+
+/* soc buttons */
+gsap.fromTo('.soc-btn',{{opacity:0,y:20}},{{opacity:1,y:0,stagger:.08,duration:.6,ease:'power2.out',scrollTrigger:{{trigger:'.soc-row',start:'top 90%',once:true}}}});
+
+/* plat links */
+gsap.fromTo('.plat-link',{{opacity:0,x:-20}},{{opacity:1,x:0,stagger:.12,duration:.7,ease:'power3.out',scrollTrigger:{{trigger:'.plat-list',start:'top 88%',once:true}}}});
+
+/* video cards */
+gsap.utils.toArray('.vc').forEach(function(el,i){{
+  gsap.fromTo(el,{{opacity:0,y:30}},{{opacity:1,y:0,duration:.8,ease:'power3.out',delay:(i%3)*.12,scrollTrigger:{{trigger:el,start:'top 92%',once:true}}}});
+}});
+
+/* booking form */
+gsap.fromTo('.booking-form',{{opacity:0,x:40}},{{opacity:1,x:0,duration:1,ease:'power3.out',scrollTrigger:{{trigger:'.booking-form',start:'top 85%',once:true}}}});
+
+}});
 </script>
-
 </body>
-</html>
+</html>"""
+
+with open('/home/claude/lowzzada_v3.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+
+print(f"Written {len(html)} chars")
+PYEOF
+Saída
+
+Written 48794 chars
